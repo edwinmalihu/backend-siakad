@@ -1,0 +1,7 @@
+.DS_Store
+.env
+backend/.env
+backend/bin/
+backend/.idea/
+backend/.vscode/
+Capture/

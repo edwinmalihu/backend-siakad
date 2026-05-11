@@ -1,0 +1,46 @@
+package master
+
+import (
+	"net/http"
+
+	"siakad/backend/internal/response"
+)
+
+type Module struct{}
+
+func NewModule() Module {
+	return Module{}
+}
+
+func (Module) Name() string {
+	return "master"
+}
+
+func (Module) BasePath() string {
+	return "/api/v1/master"
+}
+
+func (m Module) RegisterRoutes(mux *http.ServeMux) {
+	mux.HandleFunc("GET /api/v1/master/health", func(w http.ResponseWriter, r *http.Request) {
+		response.JSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"module":  m.Name(),
+			"message": "master module is ready",
+		})
+	})
+
+	mux.HandleFunc("GET /api/v1/master/reference-data", func(w http.ResponseWriter, r *http.Request) {
+		response.JSON(w, http.StatusOK, map[string]any{
+			"success": true,
+			"module":  m.Name(),
+			"resources": []string{
+				"academic_years",
+				"semesters",
+				"departments",
+				"grade_levels",
+				"classes",
+				"rooms",
+			},
+		})
+	})
+}

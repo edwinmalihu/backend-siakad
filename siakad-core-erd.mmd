@@ -1,0 +1,348 @@
+erDiagram
+    USERS ||--o{ USER_ROLES : has
+    ROLES ||--o{ USER_ROLES : assigned_to
+    ROLES ||--o{ ROLE_PERMISSIONS : grants
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : contains
+    USERS ||--|| USER_PROFILES : owns
+    USERS ||--o{ AUDIT_LOGS : creates
+
+    ACADEMIC_YEARS ||--o{ SEMESTERS : has
+    DEPARTMENTS ||--o{ CLASSES : groups
+    GRADE_LEVELS ||--o{ CLASSES : levels
+    ACADEMIC_YEARS ||--o{ CLASSES : active_in
+    ROOMS ||--o{ SCHEDULES : used_by
+
+    STUDENTS ||--o{ STUDENT_GUARDIANS : has
+    STUDENTS ||--o{ STUDENT_ENROLLMENTS : enrolled_in
+    CLASSES ||--o{ STUDENT_ENROLLMENTS : contains
+    ACADEMIC_YEARS ||--o{ STUDENT_ENROLLMENTS : scoped_by
+    SEMESTERS ||--o{ STUDENT_ENROLLMENTS : scoped_by
+
+    STUDENTS ||--o{ STUDENT_MUTATIONS : has
+    ACADEMIC_YEARS ||--o{ STUDENT_MUTATIONS : scoped_by
+    SEMESTERS ||--o{ STUDENT_MUTATIONS : scoped_by
+
+    STUDENTS ||--o{ STUDENT_GRADUATIONS : has
+    ACADEMIC_YEARS ||--o{ STUDENT_GRADUATIONS : scoped_by
+
+    STUDENTS ||--o{ ATTENDANCES : has
+    CLASSES ||--o{ ATTENDANCES : recorded_for
+
+    DISCIPLINE_CATEGORIES ||--o{ DISCIPLINE_RECORDS : classifies
+    STUDENTS ||--o{ DISCIPLINE_RECORDS : receives
+    USERS ||--o{ DISCIPLINE_RECORDS : recorded_by
+
+    TEACHERS ||--o{ EXTRACURRICULARS : coaches
+    EXTRACURRICULARS ||--o{ EXTRACURRICULAR_MEMBERS : has
+    STUDENTS ||--o{ EXTRACURRICULAR_MEMBERS : joins
+    ACADEMIC_YEARS ||--o{ EXTRACURRICULAR_MEMBERS : scoped_by
+
+    TEACHERS ||--o{ HOMEROOM_ASSIGNMENTS : assigned
+    CLASSES ||--o{ HOMEROOM_ASSIGNMENTS : has
+    ACADEMIC_YEARS ||--o{ HOMEROOM_ASSIGNMENTS : scoped_by
+    SEMESTERS ||--o{ HOMEROOM_ASSIGNMENTS : scoped_by
+
+    DEPARTMENTS ||--o{ SUBJECTS : owns
+    GRADE_LEVELS ||--o{ SUBJECTS : taught_at
+
+    TEACHERS ||--o{ TEACHING_DEVICES : uploads
+    SUBJECTS ||--o{ TEACHING_DEVICES : for
+
+    CLASSES ||--o{ SCHEDULES : has
+    SUBJECTS ||--o{ SCHEDULES : scheduled
+    TEACHERS ||--o{ SCHEDULES : teaches
+    ACADEMIC_YEARS ||--o{ SCHEDULES : scoped_by
+    SEMESTERS ||--o{ SCHEDULES : scoped_by
+
+    SUBJECTS ||--o{ ASSESSMENT_COMPONENTS : has
+    ACADEMIC_YEARS ||--o{ ASSESSMENT_COMPONENTS : scoped_by
+    SEMESTERS ||--o{ ASSESSMENT_COMPONENTS : scoped_by
+
+    STUDENTS ||--o{ STUDENT_ASSESSMENTS : receives
+    CLASSES ||--o{ STUDENT_ASSESSMENTS : in_class
+    SUBJECTS ||--o{ STUDENT_ASSESSMENTS : for
+    ASSESSMENT_COMPONENTS ||--o{ STUDENT_ASSESSMENTS : based_on
+    TEACHERS ||--o{ STUDENT_ASSESSMENTS : given_by
+    ACADEMIC_YEARS ||--o{ STUDENT_ASSESSMENTS : scoped_by
+    SEMESTERS ||--o{ STUDENT_ASSESSMENTS : scoped_by
+
+    STUDENTS ||--o{ STUDENT_GRADES : has
+    CLASSES ||--o{ STUDENT_GRADES : in_class
+    SUBJECTS ||--o{ STUDENT_GRADES : for
+    ACADEMIC_YEARS ||--o{ STUDENT_GRADES : scoped_by
+    SEMESTERS ||--o{ STUDENT_GRADES : scoped_by
+
+    INDUSTRY_CATEGORIES ||--o{ COMPANIES : groups
+    STUDENTS ||--o{ INTERNSHIPS : joins
+    COMPANIES ||--o{ INTERNSHIPS : hosts
+    ACADEMIC_YEARS ||--o{ INTERNSHIPS : scoped_by
+    INTERNSHIPS ||--o{ INTERNSHIP_LOGS : has
+
+    STUDENTS ||--o| ALUMNI : becomes
+
+    USERS ||--o{ ANNOUNCEMENTS : publishes
+
+    USERS {
+        bigint id PK
+        varchar username
+        varchar password_hash
+        varchar email
+        boolean is_active
+    }
+    ROLES {
+        bigint id PK
+        varchar name
+        varchar code
+    }
+    PERMISSIONS {
+        bigint id PK
+        varchar name
+        varchar code
+    }
+    USER_ROLES {
+        bigint id PK
+        bigint user_id FK
+        bigint role_id FK
+    }
+    ROLE_PERMISSIONS {
+        bigint id PK
+        bigint role_id FK
+        bigint permission_id FK
+    }
+    USER_PROFILES {
+        bigint id PK
+        bigint user_id FK
+        varchar full_name
+        varchar phone
+        varchar photo_url
+    }
+    AUDIT_LOGS {
+        bigint id PK
+        bigint user_id FK
+        varchar module
+        varchar action
+        varchar entity_type
+        bigint entity_id
+    }
+
+    ACADEMIC_YEARS {
+        bigint id PK
+        varchar name
+        date start_date
+        date end_date
+        boolean is_active
+    }
+    SEMESTERS {
+        bigint id PK
+        bigint academic_year_id FK
+        varchar name
+        varchar code
+        boolean is_active
+    }
+    DEPARTMENTS {
+        bigint id PK
+        varchar code
+        varchar name
+        varchar program_name
+    }
+    GRADE_LEVELS {
+        bigint id PK
+        varchar code
+        varchar name
+        int sort_order
+    }
+    CLASSES {
+        bigint id PK
+        bigint department_id FK
+        bigint grade_level_id FK
+        bigint academic_year_id FK
+        varchar name
+    }
+    ROOMS {
+        bigint id PK
+        varchar code
+        varchar name
+        varchar type
+    }
+
+    STUDENTS {
+        bigint id PK
+        varchar nis
+        varchar nisn
+        varchar full_name
+        varchar gender
+        int entry_year
+        varchar status
+    }
+    STUDENT_GUARDIANS {
+        bigint id PK
+        bigint student_id FK
+        varchar father_name
+        varchar mother_name
+        varchar guardian_name
+    }
+    STUDENT_ENROLLMENTS {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+        varchar status
+    }
+    STUDENT_MUTATIONS {
+        bigint id PK
+        bigint student_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+        varchar mutation_type
+        date effective_date
+        varchar status
+    }
+    STUDENT_GRADUATIONS {
+        bigint id PK
+        bigint student_id FK
+        bigint academic_year_id FK
+        date graduation_date
+        varchar status
+    }
+    ATTENDANCES {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        date attendance_date
+        varchar status
+    }
+    DISCIPLINE_CATEGORIES {
+        bigint id PK
+        varchar name
+        int point
+    }
+    DISCIPLINE_RECORDS {
+        bigint id PK
+        bigint student_id FK
+        bigint discipline_category_id FK
+        bigint recorded_by FK
+        date incident_date
+    }
+    EXTRACURRICULARS {
+        bigint id PK
+        bigint coach_teacher_id FK
+        varchar name
+        varchar description
+    }
+    EXTRACURRICULAR_MEMBERS {
+        bigint id PK
+        bigint extracurricular_id FK
+        bigint student_id FK
+        bigint academic_year_id FK
+        varchar status
+    }
+
+    TEACHERS {
+        bigint id PK
+        varchar nip
+        varchar nuptk
+        varchar full_name
+        varchar employment_status
+        varchar position
+    }
+    HOMEROOM_ASSIGNMENTS {
+        bigint id PK
+        bigint teacher_id FK
+        bigint class_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+    }
+    SUBJECTS {
+        bigint id PK
+        bigint department_id FK
+        bigint grade_level_id FK
+        varchar code
+        varchar name
+        int kkm
+    }
+    TEACHING_DEVICES {
+        bigint id PK
+        bigint teacher_id FK
+        bigint subject_id FK
+        varchar title
+        varchar file_url
+    }
+    SCHEDULES {
+        bigint id PK
+        bigint class_id FK
+        bigint subject_id FK
+        bigint teacher_id FK
+        bigint room_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+    }
+    ASSESSMENT_COMPONENTS {
+        bigint id PK
+        bigint subject_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+        varchar name
+        decimal weight
+    }
+    STUDENT_ASSESSMENTS {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        bigint subject_id FK
+        bigint assessment_component_id FK
+        bigint teacher_id FK
+        decimal score
+    }
+    STUDENT_GRADES {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        bigint subject_id FK
+        bigint academic_year_id FK
+        bigint semester_id FK
+        decimal final_score
+        varchar grade_letter
+    }
+
+    INDUSTRY_CATEGORIES {
+        bigint id PK
+        varchar name
+    }
+    COMPANIES {
+        bigint id PK
+        bigint category_id FK
+        varchar name
+        varchar city
+        varchar contact_person
+    }
+    INTERNSHIPS {
+        bigint id PK
+        bigint student_id FK
+        bigint company_id FK
+        bigint academic_year_id FK
+        date start_date
+        date end_date
+        varchar status
+    }
+    INTERNSHIP_LOGS {
+        bigint id PK
+        bigint internship_id FK
+        date log_date
+        text activity
+    }
+    ALUMNI {
+        bigint id PK
+        bigint student_id FK
+        int graduation_year
+        varchar current_activity
+    }
+
+    ANNOUNCEMENTS {
+        bigint id PK
+        bigint created_by FK
+        varchar title
+        text content
+        varchar target_scope
+        boolean is_published
+    }
