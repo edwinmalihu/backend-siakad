@@ -1003,6 +1003,311 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResourceListResponse'
 
+  /api/v1/academic/homeroom-assignments:
+    get:
+      tags: [Academic]
+      summary: List homeroom assignments
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan teacher, class, academic year, atau semester
+        - in: query
+          name: teacher_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: Daftar homeroom assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeroomAssignmentListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Academic]
+      summary: Buat homeroom assignment baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeroomAssignmentWriteRequest'
+      responses:
+        '201':
+          description: Homeroom assignment berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeroomAssignmentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Bentrok wali kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/homeroom-assignments/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail homeroom assignment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail homeroom assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeroomAssignmentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update homeroom assignment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HomeroomAssignmentWriteRequest'
+      responses:
+        '200':
+          description: Homeroom assignment berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeroomAssignmentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Bentrok wali kelas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete homeroom assignment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Homeroom assignment berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/teachers:
+    get:
+      tags: [Academic]
+      summary: List teachers
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan full_name, nip, nuptk, email, atau phone
+        - in: query
+          name: gender
+          schema:
+            type: string
+            enum: [male, female]
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar teacher
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Academic]
+      summary: Buat teacher baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWriteRequest'
+      responses:
+        '201':
+          description: Teacher berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: NIP, NUPTK, atau email bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/teachers/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail teacher
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail teacher
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update teacher
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWriteRequest'
+      responses:
+        '200':
+          description: Teacher berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: NIP, NUPTK, atau email bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete teacher
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Teacher berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/academic/schedules:
     get:
       tags: [Academic]
@@ -1996,6 +2301,241 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Room'
+      required: [success, data]
+
+    HomeroomAssignment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        teacher_id:
+          type: integer
+          format: uint64
+        teacher_nip:
+          type: string
+          nullable: true
+          example: "198901012015011001"
+        teacher_full_name:
+          type: string
+          example: Budi Santoso
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+          example: X RPL 1
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2026/2027
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+          example: GANJIL
+        semester_name:
+          type: string
+          example: Semester Ganjil
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - teacher_id
+        - teacher_full_name
+        - class_id
+        - class_name
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - created_at
+        - updated_at
+
+    HomeroomAssignmentWriteRequest:
+      type: object
+      properties:
+        teacher_id:
+          type: integer
+          format: uint64
+          example: 1
+        class_id:
+          type: integer
+          format: uint64
+          example: 1
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        semester_id:
+          type: integer
+          format: uint64
+          example: 1
+      required: [teacher_id, class_id, academic_year_id, semester_id]
+
+    HomeroomAssignmentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/HomeroomAssignment'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    HomeroomAssignmentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/HomeroomAssignment'
+      required: [success, data]
+
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        nip:
+          type: string
+          nullable: true
+          example: "198901012015011001"
+        nuptk:
+          type: string
+          nullable: true
+          example: "1234567890123456"
+        full_name:
+          type: string
+          example: Budi Santoso
+        gender:
+          type: string
+          nullable: true
+          enum: [male, female]
+        address:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+          example: "081234567890"
+        email:
+          type: string
+          nullable: true
+          example: budi.santoso@example.com
+        employment_status:
+          type: string
+          nullable: true
+          example: permanent
+        position:
+          type: string
+          nullable: true
+          example: Guru Matematika
+        photo_url:
+          type: string
+          nullable: true
+          example: https://example.com/photo.jpg
+        status:
+          type: string
+          example: active
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - full_name
+        - status
+        - created_at
+        - updated_at
+
+    TeacherWriteRequest:
+      type: object
+      properties:
+        nip:
+          type: string
+          example: "198901012015011001"
+        nuptk:
+          type: string
+          example: "1234567890123456"
+        full_name:
+          type: string
+          example: Budi Santoso
+        gender:
+          type: string
+          enum: [male, female]
+        address:
+          type: string
+        phone:
+          type: string
+          example: "081234567890"
+        email:
+          type: string
+          example: budi.santoso@example.com
+        employment_status:
+          type: string
+          example: permanent
+        position:
+          type: string
+          example: Guru Matematika
+        photo_url:
+          type: string
+          example: https://example.com/photo.jpg
+        status:
+          type: string
+          example: active
+      required: [full_name]
+
+    TeacherListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Teacher'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    TeacherDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Teacher'
       required: [success, data]
 
     Schedule:

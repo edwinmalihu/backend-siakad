@@ -603,9 +603,28 @@ CREATE TABLE IF NOT EXISTS `homeroom_assignments` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_class_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `class_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_semester_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `semester_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_homeroom_assignments_scope` (`class_id`, `academic_year_id`, `semester_id`),
+  UNIQUE KEY `uk_homeroom_assignments_active_scope` (`active_class_id`, `active_academic_year_id`, `active_semester_id`),
   KEY `idx_homeroom_assignments_teacher_id` (`teacher_id`),
+  KEY `idx_homeroom_assignments_class_id` (`class_id`),
   KEY `idx_homeroom_assignments_academic_year_semester` (`academic_year_id`, `semester_id`),
   CONSTRAINT `fk_homeroom_assignments_teacher_id`
     FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`)

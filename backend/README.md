@@ -128,6 +128,16 @@ source .env && go run ./cmd/api
 - `DELETE /api/v1/master/semesters/{id}`
 - `GET /api/v1/student-affairs/health`
 - `GET /api/v1/academic/health`
+- `GET /api/v1/academic/homeroom-assignments`
+- `POST /api/v1/academic/homeroom-assignments`
+- `GET /api/v1/academic/homeroom-assignments/{id}`
+- `PUT /api/v1/academic/homeroom-assignments/{id}`
+- `DELETE /api/v1/academic/homeroom-assignments/{id}`
+- `GET /api/v1/academic/teachers`
+- `POST /api/v1/academic/teachers`
+- `GET /api/v1/academic/teachers/{id}`
+- `PUT /api/v1/academic/teachers/{id}`
+- `DELETE /api/v1/academic/teachers/{id}`
 - `GET /api/v1/academic/schedules`
 - `POST /api/v1/academic/schedules`
 - `GET /api/v1/academic/schedules/{id}`
@@ -349,6 +359,100 @@ curl -X PUT http://localhost:8080/api/v1/academic/subjects/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/academic/subjects/1
+```
+
+## Contoh Request Teachers
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/academic/teachers \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nip": "198901012015011001",
+    "nuptk": "1234567890123456",
+    "full_name": "Budi Santoso",
+    "gender": "male",
+    "address": "Jl. Pendidikan No. 1",
+    "phone": "081234567890",
+    "email": "budi.santoso@example.com",
+    "employment_status": "permanent",
+    "position": "Guru Matematika",
+    "photo_url": "https://example.com/photo.jpg",
+    "status": "active"
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/academic/teachers?search=budi&gender=male&status=active"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/academic/teachers/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nip": "198901012015011001",
+    "nuptk": "1234567890123456",
+    "full_name": "Budi Santoso",
+    "gender": "male",
+    "address": "Jl. Pendidikan No. 2",
+    "phone": "081234567890",
+    "email": "budi.santoso@example.com",
+    "employment_status": "permanent",
+    "position": "Wali Kelas",
+    "photo_url": "https://example.com/photo.jpg",
+    "status": "active"
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/academic/teachers/1
+```
+
+## Contoh Request Homeroom Assignments
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/academic/homeroom-assignments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "teacher_id": 1,
+    "class_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/academic/homeroom-assignments?academic_year_id=1&semester_id=1"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/academic/homeroom-assignments/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "teacher_id": 2,
+    "class_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/academic/homeroom-assignments/1
 ```
 
 ## Contoh Request Schedules

@@ -491,6 +491,132 @@
       ]
     },
     {
+      "name": "Academic - Homeroom Assignments",
+      "item": [
+        {
+          "name": "List Homeroom Assignments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/homeroom-assignments"
+          }
+        },
+        {
+          "name": "Create Homeroom Assignment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher_id\": 1,\n  \"class_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/homeroom-assignments"
+          }
+        },
+        {
+          "name": "Get Homeroom Assignment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/homeroom-assignments/1"
+          }
+        },
+        {
+          "name": "Update Homeroom Assignment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher_id\": 2,\n  \"class_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/homeroom-assignments/1"
+          }
+        },
+        {
+          "name": "Delete Homeroom Assignment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/homeroom-assignments/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Teachers",
+      "item": [
+        {
+          "name": "List Teachers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/teachers"
+          }
+        },
+        {
+          "name": "Create Teacher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nip\": \"198901012015011001\",\n  \"nuptk\": \"1234567890123456\",\n  \"full_name\": \"Budi Santoso\",\n  \"gender\": \"male\",\n  \"address\": \"Jl. Pendidikan No. 1\",\n  \"phone\": \"081234567890\",\n  \"email\": \"budi.santoso@example.com\",\n  \"employment_status\": \"permanent\",\n  \"position\": \"Guru Matematika\",\n  \"photo_url\": \"https://example.com/photo.jpg\",\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/teachers"
+          }
+        },
+        {
+          "name": "Get Teacher By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/teachers/1"
+          }
+        },
+        {
+          "name": "Update Teacher",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nip\": \"198901012015011001\",\n  \"nuptk\": \"1234567890123456\",\n  \"full_name\": \"Budi Santoso\",\n  \"gender\": \"male\",\n  \"address\": \"Jl. Pendidikan No. 2\",\n  \"phone\": \"081234567890\",\n  \"email\": \"budi.santoso@example.com\",\n  \"employment_status\": \"permanent\",\n  \"position\": \"Wali Kelas\",\n  \"photo_url\": \"https://example.com/photo.jpg\",\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/teachers/1"
+          }
+        },
+        {
+          "name": "Delete Teacher",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/teachers/1"
+          }
+        }
+      ]
+    },
+    {
       "name": "Academic - Schedules",
       "item": [
         {
