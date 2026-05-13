@@ -99,7 +99,12 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	created, err := h.repo.Create(r.Context(), item)
 	if err != nil {
-		response.Error(w, http.StatusInternalServerError, err.Error())
+		switch {
+		case errors.Is(err, ErrDuplicateName):
+			response.Error(w, http.StatusConflict, "academic year name already exists")
+		default:
+			response.Error(w, http.StatusInternalServerError, err.Error())
+		}
 		return
 	}
 
@@ -129,12 +134,14 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 
 	updated, err := h.repo.Update(r.Context(), id, item)
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
+		switch {
+		case errors.Is(err, ErrNotFound):
 			response.Error(w, http.StatusNotFound, "academic year not found")
-			return
+		case errors.Is(err, ErrDuplicateName):
+			response.Error(w, http.StatusConflict, "academic year name already exists")
+		default:
+			response.Error(w, http.StatusInternalServerError, err.Error())
 		}
-
-		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 

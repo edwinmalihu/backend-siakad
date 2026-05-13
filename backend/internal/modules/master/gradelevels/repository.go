@@ -171,9 +171,9 @@ func mapDuplicateError(err error) error {
 
 	message := strings.ToLower(mysqlErr.Message)
 	switch {
-	case strings.Contains(message, "uk_grade_levels_code"):
+	case strings.Contains(message, "uk_grade_levels_active_code"), strings.Contains(message, "active_code"):
 		return ErrDuplicateCode
-	case strings.Contains(message, "uk_grade_levels_name"):
+	case strings.Contains(message, "uk_grade_levels_active_name"), strings.Contains(message, "active_name"):
 		return ErrDuplicateName
 	default:
 		return fmt.Errorf("duplicate grade level data: %w", err)

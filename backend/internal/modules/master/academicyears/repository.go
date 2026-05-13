@@ -6,9 +6,14 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+
+	mysqlDriver "github.com/go-sql-driver/mysql"
 )
 
-var ErrNotFound = errors.New("academic year not found")
+var (
+	ErrNotFound      = errors.New("academic year not found")
+	ErrDuplicateName = errors.New("academic year name already exists")
+)
 
 type Repository struct {
 	db *sql.DB
@@ -116,6 +121,9 @@ func (r *Repository) Create(ctx context.Context, item AcademicYear) (*AcademicYe
 		VALUES (?, ?, ?, ?)
 	`, item.Name, item.StartDate, item.EndDate, item.IsActive)
 	if err != nil {
+		if dupErr := mapDuplicateError(err); dupErr != nil {
+			return nil, dupErr
+		}
 		return nil, fmt.Errorf("insert academic year: %w", err)
 	}
 
@@ -150,6 +158,9 @@ func (r *Repository) Update(ctx context.Context, id uint64, item AcademicYear) (
 		WHERE id = ? AND deleted_at IS NULL
 	`, item.Name, item.StartDate, item.EndDate, item.IsActive, id)
 	if err != nil {
+		if dupErr := mapDuplicateError(err); dupErr != nil {
+			return nil, dupErr
+		}
 		return nil, fmt.Errorf("update academic year: %w", err)
 	}
 
@@ -187,4 +198,19 @@ func (r *Repository) Delete(ctx context.Context, id uint64) error {
 	}
 
 	return nil
+}
+
+func mapDuplicateError(err error) error {
+	var mysqlErr *mysqlDriver.MySQLError
+	if !errors.As(err, &mysqlErr) || mysqlErr.Number != 1062 {
+		return nil
+	}
+
+	message := strings.ToLower(mysqlErr.Message)
+	switch {
+	case strings.Contains(message, "uk_academic_years_active_name"), strings.Contains(message, "active_name"):
+		return ErrDuplicateName
+	default:
+		return fmt.Errorf("duplicate academic year data: %w", err)
+	}
 }

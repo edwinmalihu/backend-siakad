@@ -104,8 +104,14 @@ CREATE TABLE IF NOT EXISTS `academic_years` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_name` VARCHAR(20) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_academic_years_name` (`name`),
+  UNIQUE KEY `uk_academic_years_active_name` (`active_name`),
   KEY `idx_academic_years_is_active` (`is_active`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -118,8 +124,21 @@ CREATE TABLE IF NOT EXISTS `semesters` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_code` VARCHAR(20) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `code`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_semesters_year_code` (`academic_year_id`, `code`),
+  UNIQUE KEY `uk_semesters_active_year_code` (`active_academic_year_id`, `active_code`),
+  KEY `idx_semesters_academic_year_id` (`academic_year_id`),
   KEY `idx_semesters_is_active` (`is_active`),
   CONSTRAINT `fk_semesters_academic_year_id`
     FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years` (`id`)
@@ -136,9 +155,21 @@ CREATE TABLE IF NOT EXISTS `departments` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_code` VARCHAR(30) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `code`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_name` VARCHAR(150) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_departments_code` (`code`),
-  UNIQUE KEY `uk_departments_name` (`name`)
+  UNIQUE KEY `uk_departments_active_code` (`active_code`),
+  UNIQUE KEY `uk_departments_active_name` (`active_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `grade_levels` (
@@ -149,9 +180,21 @@ CREATE TABLE IF NOT EXISTS `grade_levels` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_code` VARCHAR(20) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `code`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_name` VARCHAR(50) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_grade_levels_code` (`code`),
-  UNIQUE KEY `uk_grade_levels_name` (`name`)
+  UNIQUE KEY `uk_grade_levels_active_code` (`active_code`),
+  UNIQUE KEY `uk_grade_levels_active_name` (`active_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `rooms` (
@@ -178,8 +221,33 @@ CREATE TABLE IF NOT EXISTS `classes` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_department_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `department_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_grade_level_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `grade_level_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_name` VARCHAR(50) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_classes_unique_scope` (`academic_year_id`, `department_id`, `grade_level_id`, `name`),
+  UNIQUE KEY `uk_classes_active_scope` (`active_academic_year_id`, `active_department_id`, `active_grade_level_id`, `active_name`),
+  KEY `idx_classes_academic_year_id` (`academic_year_id`),
   KEY `idx_classes_department_id` (`department_id`),
   KEY `idx_classes_grade_level_id` (`grade_level_id`),
   KEY `idx_classes_is_active` (`is_active`),
