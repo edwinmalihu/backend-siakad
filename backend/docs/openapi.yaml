@@ -636,6 +636,144 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/rooms:
+    get:
+      tags: [Master]
+      summary: List rooms
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan code, name, atau type
+      responses:
+        '200':
+          description: Daftar room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Master]
+      summary: Buat room baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomWriteRequest'
+      responses:
+        '201':
+          description: Room berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/rooms/{id}:
+    get:
+      tags: [Master]
+      summary: Detail room
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail room
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Master]
+      summary: Update room
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomWriteRequest'
+      responses:
+        '200':
+          description: Room berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomDetailResponse'
+        '400':
+          description: Payload atau ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Master]
+      summary: Soft delete room
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Room berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags: [Master]
       summary: Update grade level
@@ -864,6 +1002,323 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResourceListResponse'
+
+  /api/v1/academic/schedules:
+    get:
+      tags: [Academic]
+      summary: List schedules
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan class, subject, teacher, academic year, atau semester
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: teacher_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: room_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: day_of_week
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 7
+      responses:
+        '200':
+          description: Daftar schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Academic]
+      summary: Buat schedule baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleWriteRequest'
+      responses:
+        '201':
+          description: Schedule berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Bentrok jadwal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/schedules/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail schedule
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail schedule
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update schedule
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleWriteRequest'
+      responses:
+        '200':
+          description: Schedule berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduleDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Bentrok jadwal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete schedule
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Schedule berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/subjects:
+    get:
+      tags: [Academic]
+      summary: List subjects
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan code, name, subject_type, department, atau grade level
+        - in: query
+          name: department_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: grade_level_id
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: Daftar subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Academic]
+      summary: Buat subject baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectWriteRequest'
+      responses:
+        '201':
+          description: Subject berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/subjects/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail subject
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update subject
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectWriteRequest'
+      responses:
+        '200':
+          description: Subject berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete subject
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Subject berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/v1/industry-relations/health:
     get:
@@ -1461,4 +1916,360 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/GradeLevel'
+      required: [success, data]
+
+    Room:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        code:
+          type: string
+          example: LAB-01
+        name:
+          type: string
+          example: Laboratorium 1
+        type:
+          type: string
+          nullable: true
+          example: lab
+        capacity:
+          type: integer
+          nullable: true
+          example: 36
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - code
+        - name
+        - created_at
+        - updated_at
+
+    RoomWriteRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: LAB-01
+        name:
+          type: string
+          example: Laboratorium 1
+        type:
+          type: string
+          example: lab
+        capacity:
+          type: integer
+          example: 36
+      required: [code, name]
+
+    RoomListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    RoomDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Room'
+      required: [success, data]
+
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+          example: X RPL 1
+        subject_id:
+          type: integer
+          format: uint64
+        subject_code:
+          type: string
+          example: MTK-101
+        subject_name:
+          type: string
+          example: Matematika Dasar
+        teacher_id:
+          type: integer
+          format: uint64
+        teacher_full_name:
+          type: string
+          example: Budi Santoso
+        room_id:
+          type: integer
+          format: uint64
+          nullable: true
+        room_code:
+          type: string
+          nullable: true
+          example: LAB-01
+        room_name:
+          type: string
+          nullable: true
+          example: Laboratorium 1
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2026/2027
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+          example: GANJIL
+        semester_name:
+          type: string
+          example: Semester Ganjil
+        day_of_week:
+          type: integer
+          minimum: 1
+          maximum: 7
+          example: 1
+        start_time:
+          type: string
+          example: 07:00:00
+        end_time:
+          type: string
+          example: 08:30:00
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - class_id
+        - class_name
+        - subject_id
+        - subject_code
+        - subject_name
+        - teacher_id
+        - teacher_full_name
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - day_of_week
+        - start_time
+        - end_time
+        - created_at
+        - updated_at
+
+    ScheduleWriteRequest:
+      type: object
+      properties:
+        class_id:
+          type: integer
+          format: uint64
+          example: 1
+        subject_id:
+          type: integer
+          format: uint64
+          example: 1
+        teacher_id:
+          type: integer
+          format: uint64
+          example: 1
+        room_id:
+          type: integer
+          format: uint64
+          nullable: true
+          example: 1
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        semester_id:
+          type: integer
+          format: uint64
+          example: 1
+        day_of_week:
+          type: integer
+          minimum: 1
+          maximum: 7
+          example: 1
+        start_time:
+          type: string
+          example: 07:00
+        end_time:
+          type: string
+          example: 08:30
+      required: [class_id, subject_id, teacher_id, academic_year_id, semester_id, day_of_week, start_time, end_time]
+
+    ScheduleListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    ScheduleDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Schedule'
+      required: [success, data]
+
+    Subject:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        department_id:
+          type: integer
+          format: uint64
+        department_code:
+          type: string
+          example: RPL
+        department_name:
+          type: string
+          example: Rekayasa Perangkat Lunak
+        grade_level_id:
+          type: integer
+          format: uint64
+        grade_level_code:
+          type: string
+          example: X
+        grade_level_name:
+          type: string
+          example: Kelas 10
+        code:
+          type: string
+          example: MTK-101
+        name:
+          type: string
+          example: Matematika Dasar
+        subject_type:
+          type: string
+          nullable: true
+          example: general
+        kkm:
+          type: number
+          format: double
+          nullable: true
+          example: 75
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - department_id
+        - department_code
+        - department_name
+        - grade_level_id
+        - grade_level_code
+        - grade_level_name
+        - code
+        - name
+        - created_at
+        - updated_at
+
+    SubjectWriteRequest:
+      type: object
+      properties:
+        department_id:
+          type: integer
+          format: uint64
+          example: 1
+        grade_level_id:
+          type: integer
+          format: uint64
+          example: 1
+        code:
+          type: string
+          example: MTK-101
+        name:
+          type: string
+          example: Matematika Dasar
+        subject_type:
+          type: string
+          example: general
+        kkm:
+          type: number
+          format: double
+          example: 75
+      required: [department_id, grade_level_id, code, name]
+
+    SubjectListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    SubjectDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Subject'
       required: [success, data]

@@ -116,6 +116,11 @@ source .env && go run ./cmd/api
 - `GET /api/v1/master/grade-levels/{id}`
 - `PUT /api/v1/master/grade-levels/{id}`
 - `DELETE /api/v1/master/grade-levels/{id}`
+- `GET /api/v1/master/rooms`
+- `POST /api/v1/master/rooms`
+- `GET /api/v1/master/rooms/{id}`
+- `PUT /api/v1/master/rooms/{id}`
+- `DELETE /api/v1/master/rooms/{id}`
 - `GET /api/v1/master/semesters`
 - `POST /api/v1/master/semesters`
 - `GET /api/v1/master/semesters/{id}`
@@ -123,14 +128,23 @@ source .env && go run ./cmd/api
 - `DELETE /api/v1/master/semesters/{id}`
 - `GET /api/v1/student-affairs/health`
 - `GET /api/v1/academic/health`
+- `GET /api/v1/academic/schedules`
+- `POST /api/v1/academic/schedules`
+- `GET /api/v1/academic/schedules/{id}`
+- `PUT /api/v1/academic/schedules/{id}`
+- `DELETE /api/v1/academic/schedules/{id}`
+- `GET /api/v1/academic/subjects`
+- `POST /api/v1/academic/subjects`
+- `GET /api/v1/academic/subjects/{id}`
+- `PUT /api/v1/academic/subjects/{id}`
+- `DELETE /api/v1/academic/subjects/{id}`
 - `GET /api/v1/industry-relations/health`
 - `GET /api/v1/shared/health`
 
 ## Catatan
 
-- Saat ini endpoint masih berupa scaffold.
-- `academic_years` sudah memiliki CRUD dasar end-to-end.
-- Layer business logic dan repository belum diisi implementasi CRUD.
+- Modul `master` dan sebagian modul `academic` sudah memiliki CRUD dasar end-to-end.
+- Endpoint `schedules` sudah memiliki validasi relasi serta deteksi bentrok jadwal untuk kelas, guru, dan ruang.
 - Schema database utama ada di `../db/schema.sql`.
 
 ## Contoh Request Academic Years
@@ -251,6 +265,140 @@ curl -X PUT http://localhost:8080/api/v1/master/grade-levels/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/master/grade-levels/1
+```
+
+## Contoh Request Rooms
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/master/rooms \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "LAB-01",
+    "name": "Laboratorium 1",
+    "type": "lab",
+    "capacity": 36
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/master/rooms?search=LAB"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/master/rooms/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "LAB-01",
+    "name": "Laboratorium 1",
+    "type": "computer_lab",
+    "capacity": 40
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/master/rooms/1
+```
+
+## Contoh Request Subjects
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/academic/subjects \
+  -H "Content-Type: application/json" \
+  -d '{
+    "department_id": 1,
+    "grade_level_id": 1,
+    "code": "MTK-101",
+    "name": "Matematika Dasar",
+    "subject_type": "general",
+    "kkm": 75
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/academic/subjects?search=MTK&department_id=1&grade_level_id=1"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/academic/subjects/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "department_id": 1,
+    "grade_level_id": 1,
+    "code": "MTK-101",
+    "name": "Matematika Dasar",
+    "subject_type": "compulsory",
+    "kkm": 80
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/academic/subjects/1
+```
+
+## Contoh Request Schedules
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/academic/schedules \
+  -H "Content-Type: application/json" \
+  -d '{
+    "class_id": 1,
+    "subject_id": 1,
+    "teacher_id": 1,
+    "room_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1,
+    "day_of_week": 1,
+    "start_time": "07:00",
+    "end_time": "08:30"
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/academic/schedules?academic_year_id=1&semester_id=1&day_of_week=1"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/academic/schedules/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "class_id": 1,
+    "subject_id": 1,
+    "teacher_id": 1,
+    "room_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1,
+    "day_of_week": 1,
+    "start_time": "08:00",
+    "end_time": "09:30"
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/academic/schedules/1
 ```
 
 ## Contoh Request Classes

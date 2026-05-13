@@ -48,7 +48,7 @@ func New() (*App, error) {
 		auth.NewModule(),
 		master.NewModule(db),
 		studentaffairs.NewModule(),
-		academic.NewModule(),
+		academic.NewModule(db),
 		industryrelations.NewModule(),
 		shared.NewModule(),
 	}

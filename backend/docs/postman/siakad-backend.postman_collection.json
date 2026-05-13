@@ -365,6 +365,195 @@
       ]
     },
     {
+      "name": "Master - Rooms",
+      "item": [
+        {
+          "name": "List Rooms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/rooms"
+          }
+        },
+        {
+          "name": "Create Room",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"LAB-01\",\n  \"name\": \"Laboratorium 1\",\n  \"type\": \"lab\",\n  \"capacity\": 36\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/rooms"
+          }
+        },
+        {
+          "name": "Get Room By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/rooms/1"
+          }
+        },
+        {
+          "name": "Update Room",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"LAB-01\",\n  \"name\": \"Laboratorium 1\",\n  \"type\": \"computer_lab\",\n  \"capacity\": 40\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/rooms/1"
+          }
+        },
+        {
+          "name": "Delete Room",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/rooms/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Subjects",
+      "item": [
+        {
+          "name": "List Subjects",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/subjects"
+          }
+        },
+        {
+          "name": "Create Subject",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_id\": 1,\n  \"grade_level_id\": 1,\n  \"code\": \"MTK-101\",\n  \"name\": \"Matematika Dasar\",\n  \"subject_type\": \"general\",\n  \"kkm\": 75\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/subjects"
+          }
+        },
+        {
+          "name": "Get Subject By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/subjects/1"
+          }
+        },
+        {
+          "name": "Update Subject",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"department_id\": 1,\n  \"grade_level_id\": 1,\n  \"code\": \"MTK-101\",\n  \"name\": \"Matematika Dasar\",\n  \"subject_type\": \"compulsory\",\n  \"kkm\": 80\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/subjects/1"
+          }
+        },
+        {
+          "name": "Delete Subject",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/subjects/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Schedules",
+      "item": [
+        {
+          "name": "List Schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/schedules"
+          }
+        },
+        {
+          "name": "Create Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"teacher_id\": 1,\n  \"room_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"day_of_week\": 1,\n  \"start_time\": \"07:00\",\n  \"end_time\": \"08:30\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/schedules"
+          }
+        },
+        {
+          "name": "Get Schedule By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/schedules/1"
+          }
+        },
+        {
+          "name": "Update Schedule",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"teacher_id\": 1,\n  \"room_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"day_of_week\": 1,\n  \"start_time\": \"08:00\",\n  \"end_time\": \"09:30\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/schedules/1"
+          }
+        },
+        {
+          "name": "Delete Schedule",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/schedules/1"
+          }
+        }
+      ]
+    },
+    {
       "name": "Module Health",
       "item": [
         {

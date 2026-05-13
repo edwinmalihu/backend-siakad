@@ -206,9 +206,21 @@ CREATE TABLE IF NOT EXISTS `rooms` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_code` VARCHAR(30) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `code`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_name` VARCHAR(100) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_rooms_code` (`code`),
-  UNIQUE KEY `uk_rooms_name` (`name`)
+  UNIQUE KEY `uk_rooms_active_code` (`active_code`),
+  UNIQUE KEY `uk_rooms_active_name` (`active_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `classes` (
@@ -337,8 +349,14 @@ CREATE TABLE IF NOT EXISTS `subjects` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_code` VARCHAR(30) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `code`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_subjects_code` (`code`),
+  UNIQUE KEY `uk_subjects_active_code` (`active_code`),
   KEY `idx_subjects_department_id` (`department_id`),
   KEY `idx_subjects_grade_level_id` (`grade_level_id`),
   KEY `idx_subjects_name` (`name`),
