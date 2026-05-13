@@ -180,6 +180,163 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/classes:
+    get:
+      tags: [Master]
+      summary: List classes
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan nama kelas atau nama relasi master
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: department_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: grade_level_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: is_active
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Daftar class
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Master]
+      summary: Buat class baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassWriteRequest'
+      responses:
+        '201':
+          description: Class berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Scope class bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/classes/{id}:
+    get:
+      tags: [Master]
+      summary: Detail class
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail class
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Master]
+      summary: Update class
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassWriteRequest'
+      responses:
+        '200':
+          description: Class berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Scope class bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Master]
+      summary: Soft delete class
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Class berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags: [Master]
       summary: Update academic year
@@ -951,6 +1108,115 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/AcademicYear'
+      required: [success, data]
+
+    Class:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2027/2028
+        department_id:
+          type: integer
+          format: uint64
+        department_code:
+          type: string
+          example: RPL
+        department_name:
+          type: string
+          example: Rekayasa Perangkat Lunak
+        grade_level_id:
+          type: integer
+          format: uint64
+        grade_level_code:
+          type: string
+          example: X
+        grade_level_name:
+          type: string
+          example: Kelas 10
+        name:
+          type: string
+          example: A
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - academic_year_id
+        - academic_year_name
+        - department_id
+        - department_code
+        - department_name
+        - grade_level_id
+        - grade_level_code
+        - grade_level_name
+        - name
+        - is_active
+        - created_at
+        - updated_at
+
+    ClassWriteRequest:
+      type: object
+      properties:
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        department_id:
+          type: integer
+          format: uint64
+          example: 1
+        grade_level_id:
+          type: integer
+          format: uint64
+          example: 1
+        name:
+          type: string
+          example: A
+        is_active:
+          type: boolean
+          example: true
+      required: [academic_year_id, department_id, grade_level_id, name, is_active]
+
+    ClassListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Class'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    ClassDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Class'
       required: [success, data]
 
     Semester:

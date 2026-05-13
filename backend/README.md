@@ -101,6 +101,11 @@ source .env && go run ./cmd/api
 - `GET /api/v1/master/academic-years/{id}`
 - `PUT /api/v1/master/academic-years/{id}`
 - `DELETE /api/v1/master/academic-years/{id}`
+- `GET /api/v1/master/classes`
+- `POST /api/v1/master/classes`
+- `GET /api/v1/master/classes/{id}`
+- `PUT /api/v1/master/classes/{id}`
+- `DELETE /api/v1/master/classes/{id}`
 - `GET /api/v1/master/departments`
 - `POST /api/v1/master/departments`
 - `GET /api/v1/master/departments/{id}`
@@ -248,6 +253,48 @@ curl -X PUT http://localhost:8080/api/v1/master/grade-levels/1 \
 curl -X DELETE http://localhost:8080/api/v1/master/grade-levels/1
 ```
 
+## Contoh Request Classes
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/master/classes \
+  -H "Content-Type: application/json" \
+  -d '{
+    "academic_year_id": 1,
+    "department_id": 1,
+    "grade_level_id": 1,
+    "name": "A",
+    "is_active": true
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/master/classes?academic_year_id=1&department_id=1&grade_level_id=1&is_active=true"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/master/classes/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "academic_year_id": 1,
+    "department_id": 1,
+    "grade_level_id": 1,
+    "name": "A1",
+    "is_active": false
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/master/classes/1
+```
+
 ## Contoh Request Semesters
 
 ### Create
@@ -287,13 +334,3 @@ curl -X PUT http://localhost:8080/api/v1/master/semesters/1 \
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/master/semesters/1
 ```
-
-## Langkah berikutnya
-
-Setelah scaffold ini, langkah ideal berikutnya:
-
-1. buat repository untuk tabel master
-2. buat auth login dasar
-3. buat CRUD `students`
-4. buat CRUD `teachers`
-5. buat CRUD `classes`, `departments`, `grade_levels`

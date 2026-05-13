@@ -50,6 +50,69 @@
       ]
     },
     {
+      "name": "Master - Classes",
+      "item": [
+        {
+          "name": "List Classes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/classes"
+          }
+        },
+        {
+          "name": "Create Class",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": {{academicYearId}},\n  \"department_id\": 1,\n  \"grade_level_id\": 1,\n  \"name\": \"A\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/classes"
+          }
+        },
+        {
+          "name": "Get Class By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/classes/1"
+          }
+        },
+        {
+          "name": "Update Class",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": {{academicYearId}},\n  \"department_id\": 1,\n  \"grade_level_id\": 1,\n  \"name\": \"A1\",\n  \"is_active\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/classes/1"
+          }
+        },
+        {
+          "name": "Delete Class",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/classes/1"
+          }
+        }
+      ]
+    },
+    {
       "name": "Master - Academic Years",
       "item": [
         {
