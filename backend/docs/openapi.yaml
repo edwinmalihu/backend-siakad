@@ -323,6 +323,282 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/departments:
+    get:
+      tags: [Master]
+      summary: List departments
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan code, name, program_name, atau field_name
+      responses:
+        '200':
+          description: Daftar department
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Master]
+      summary: Buat department baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentWriteRequest'
+      responses:
+        '201':
+          description: Department berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/departments/{id}:
+    get:
+      tags: [Master]
+      summary: Detail department
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail department
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/grade-levels:
+    get:
+      tags: [Master]
+      summary: List grade levels
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan code atau name
+      responses:
+        '200':
+          description: Daftar grade level
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Master]
+      summary: Buat grade level baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeLevelWriteRequest'
+      responses:
+        '201':
+          description: Grade level berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/master/grade-levels/{id}:
+    get:
+      tags: [Master]
+      summary: Detail grade level
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail grade level
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Master]
+      summary: Update grade level
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeLevelWriteRequest'
+      responses:
+        '200':
+          description: Grade level berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GradeLevelDetailResponse'
+        '400':
+          description: Payload atau ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Master]
+      summary: Soft delete grade level
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Grade level berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Master]
+      summary: Update department
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentWriteRequest'
+      responses:
+        '200':
+          description: Department berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DepartmentDetailResponse'
+        '400':
+          description: Payload atau ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Code atau name bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Master]
+      summary: Soft delete department
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Department berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     put:
       tags: [Master]
       summary: Update semester
@@ -759,4 +1035,164 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Semester'
+      required: [success, data]
+
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        code:
+          type: string
+          example: RPL
+        name:
+          type: string
+          example: Rekayasa Perangkat Lunak
+        program_name:
+          type: string
+          nullable: true
+          example: Teknik Informatika
+        field_name:
+          type: string
+          nullable: true
+          example: Pengembangan Perangkat Lunak
+        description:
+          type: string
+          nullable: true
+          example: Jurusan untuk pengembangan software
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - code
+        - name
+        - created_at
+        - updated_at
+
+    DepartmentWriteRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: RPL
+        name:
+          type: string
+          example: Rekayasa Perangkat Lunak
+        program_name:
+          type: string
+          example: Teknik Informatika
+        field_name:
+          type: string
+          example: Pengembangan Perangkat Lunak
+        description:
+          type: string
+          example: Jurusan untuk pengembangan software
+      required: [code, name]
+
+    DepartmentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Department'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    DepartmentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Department'
+      required: [success, data]
+
+    GradeLevel:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        code:
+          type: string
+          example: X
+        name:
+          type: string
+          example: Kelas 10
+        sort_order:
+          type: integer
+          example: 10
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - code
+        - name
+        - sort_order
+        - created_at
+        - updated_at
+
+    GradeLevelWriteRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: X
+        name:
+          type: string
+          example: Kelas 10
+        sort_order:
+          type: integer
+          example: 10
+      required: [code, name, sort_order]
+
+    GradeLevelListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/GradeLevel'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    GradeLevelDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/GradeLevel'
       required: [success, data]

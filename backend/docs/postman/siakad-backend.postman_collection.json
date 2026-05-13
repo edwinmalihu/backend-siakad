@@ -176,6 +176,132 @@
       ]
     },
     {
+      "name": "Master - Departments",
+      "item": [
+        {
+          "name": "List Departments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/departments"
+          }
+        },
+        {
+          "name": "Create Department",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"RPL\",\n  \"name\": \"Rekayasa Perangkat Lunak\",\n  \"program_name\": \"Teknik Informatika\",\n  \"field_name\": \"Pengembangan Perangkat Lunak\",\n  \"description\": \"Jurusan untuk pengembangan software\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/departments"
+          }
+        },
+        {
+          "name": "Get Department By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/departments/1"
+          }
+        },
+        {
+          "name": "Update Department",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"RPL\",\n  \"name\": \"Rekayasa Perangkat Lunak\",\n  \"program_name\": \"Teknik Informatika\",\n  \"field_name\": \"Software Engineering\",\n  \"description\": \"Jurusan untuk pengembangan software\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/departments/1"
+          }
+        },
+        {
+          "name": "Delete Department",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/departments/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Master - Grade Levels",
+      "item": [
+        {
+          "name": "List Grade Levels",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/grade-levels"
+          }
+        },
+        {
+          "name": "Create Grade Level",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"X\",\n  \"name\": \"Kelas 10\",\n  \"sort_order\": 10\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/grade-levels"
+          }
+        },
+        {
+          "name": "Get Grade Level By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/grade-levels/1"
+          }
+        },
+        {
+          "name": "Update Grade Level",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"X\",\n  \"name\": \"Kelas 10\",\n  \"sort_order\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/grade-levels/1"
+          }
+        },
+        {
+          "name": "Delete Grade Level",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/grade-levels/1"
+          }
+        }
+      ]
+    },
+    {
       "name": "Module Health",
       "item": [
         {

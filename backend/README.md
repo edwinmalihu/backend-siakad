@@ -101,6 +101,16 @@ source .env && go run ./cmd/api
 - `GET /api/v1/master/academic-years/{id}`
 - `PUT /api/v1/master/academic-years/{id}`
 - `DELETE /api/v1/master/academic-years/{id}`
+- `GET /api/v1/master/departments`
+- `POST /api/v1/master/departments`
+- `GET /api/v1/master/departments/{id}`
+- `PUT /api/v1/master/departments/{id}`
+- `DELETE /api/v1/master/departments/{id}`
+- `GET /api/v1/master/grade-levels`
+- `POST /api/v1/master/grade-levels`
+- `GET /api/v1/master/grade-levels/{id}`
+- `PUT /api/v1/master/grade-levels/{id}`
+- `DELETE /api/v1/master/grade-levels/{id}`
 - `GET /api/v1/master/semesters`
 - `POST /api/v1/master/semesters`
 - `GET /api/v1/master/semesters/{id}`
@@ -156,6 +166,86 @@ curl -X PUT http://localhost:8080/api/v1/master/academic-years/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/master/academic-years/1
+```
+
+## Contoh Request Departments
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/master/departments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "RPL",
+    "name": "Rekayasa Perangkat Lunak",
+    "program_name": "Teknik Informatika",
+    "field_name": "Pengembangan Perangkat Lunak",
+    "description": "Jurusan untuk pengembangan software"
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/master/departments?search=RPL"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/master/departments/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "RPL",
+    "name": "Rekayasa Perangkat Lunak",
+    "program_name": "Teknik Informatika",
+    "field_name": "Software Engineering",
+    "description": "Jurusan untuk pengembangan software"
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/master/departments/1
+```
+
+## Contoh Request Grade Levels
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/master/grade-levels \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "X",
+    "name": "Kelas 10",
+    "sort_order": 10
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/master/grade-levels?search=X"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/master/grade-levels/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "code": "X",
+    "name": "Kelas 10",
+    "sort_order": 1
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/master/grade-levels/1
 ```
 
 ## Contoh Request Semesters
