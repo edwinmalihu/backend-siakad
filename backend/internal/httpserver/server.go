@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	apidocs "siakad/backend/docs"
 	"siakad/backend/internal/database"
 	"siakad/backend/internal/response"
 )
@@ -47,6 +48,18 @@ func New(opts ServerOptions) *http.Server {
 }
 
 func registerBaseRoutes(mux *http.ServeMux, opts ServerOptions) {
+	mux.HandleFunc("GET /openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(apidocs.OpenAPIYAML)
+	})
+
+	mux.HandleFunc("GET /docs/openapi.yaml", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/yaml; charset=utf-8")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(apidocs.OpenAPIYAML)
+	})
+
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
 		dbStatus := "disabled"
 		statusCode := http.StatusOK

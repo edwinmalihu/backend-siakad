@@ -1,0 +1,232 @@
+{
+  "info": {
+    "name": "SIAKAD Backend API",
+    "_postman_id": "dd2a7b31-e4a8-4b6f-b0d6-b10f4966d8ff",
+    "description": "Postman collection untuk endpoint awal backend SIAKAD.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:18080"
+    },
+    {
+      "key": "academicYearId",
+      "value": "1"
+    },
+    {
+      "key": "semesterId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "System",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        },
+        {
+          "name": "API Index",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1"
+          }
+        },
+        {
+          "name": "OpenAPI Spec",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/openapi.yaml"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Master - Academic Years",
+      "item": [
+        {
+          "name": "List Academic Years",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/academic-years"
+          }
+        },
+        {
+          "name": "Create Academic Year",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2027/2028\",\n  \"start_date\": \"2027-07-01\",\n  \"end_date\": \"2028-06-30\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/academic-years"
+          }
+        },
+        {
+          "name": "Get Academic Year By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/academic-years/{{academicYearId}}"
+          }
+        },
+        {
+          "name": "Update Academic Year",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"2027/2028\",\n  \"start_date\": \"2027-07-01\",\n  \"end_date\": \"2028-06-30\",\n  \"is_active\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/academic-years/{{academicYearId}}"
+          }
+        },
+        {
+          "name": "Delete Academic Year",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/academic-years/{{academicYearId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Master - Semesters",
+      "item": [
+        {
+          "name": "List Semesters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/semesters"
+          }
+        },
+        {
+          "name": "Create Semester",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": {{academicYearId}},\n  \"name\": \"Semester Ganjil\",\n  \"code\": \"GANJIL\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/semesters"
+          }
+        },
+        {
+          "name": "Get Semester By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/semesters/{{semesterId}}"
+          }
+        },
+        {
+          "name": "Update Semester",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"academic_year_id\": {{academicYearId}},\n  \"name\": \"Semester Ganjil Revisi\",\n  \"code\": \"GANJIL\",\n  \"is_active\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/master/semesters/{{semesterId}}"
+          }
+        },
+        {
+          "name": "Delete Semester",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/semesters/{{semesterId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Module Health",
+      "item": [
+        {
+          "name": "Auth Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/auth/health"
+          }
+        },
+        {
+          "name": "Master Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/master/health"
+          }
+        },
+        {
+          "name": "Student Affairs Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/health"
+          }
+        },
+        {
+          "name": "Academic Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/health"
+          }
+        },
+        {
+          "name": "Industry Relations Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/health"
+          }
+        },
+        {
+          "name": "Shared Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/health"
+          }
+        }
+      ]
+    }
+  ]
+}
