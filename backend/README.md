@@ -76,6 +76,8 @@ MYSQL_PORT=3306
 MYSQL_USER=root
 MYSQL_PASSWORD=your-password
 MYSQL_DATABASE=siakad_db
+AUTH_TOKEN_SECRET=dev-secret-change-me
+AUTH_TOKEN_TTL=24h
 ```
 
 4. Download dependency
@@ -95,6 +97,8 @@ source .env && go run ./cmd/api
 - `GET /health`
 - `GET /api/v1`
 - `GET /api/v1/auth/health`
+- `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
 - `GET /api/v1/master/health`
 - `GET /api/v1/master/academic-years`
 - `POST /api/v1/master/academic-years`
@@ -154,8 +158,29 @@ source .env && go run ./cmd/api
 ## Catatan
 
 - Modul `master` dan sebagian modul `academic` sudah memiliki CRUD dasar end-to-end.
+- Modul `auth` sudah menyediakan login admin berbasis `Bearer token`.
 - Endpoint `schedules` sudah memiliki validasi relasi serta deteksi bentrok jadwal untuk kelas, guru, dan ruang.
 - Schema database utama ada di `../db/schema.sql`.
+
+## Contoh Request Auth
+
+### Login
+
+```bash
+curl -X POST http://localhost:8080/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "identifier": "admin",
+    "password": "Admin123!"
+  }'
+```
+
+### Me
+
+```bash
+curl http://localhost:8080/api/v1/auth/me \
+  -H "Authorization: Bearer your-access-token"
+```
 
 ## Contoh Request Academic Years
 

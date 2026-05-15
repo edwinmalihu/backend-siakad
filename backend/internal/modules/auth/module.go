@@ -1,15 +1,30 @@
 package auth
 
 import (
+	"database/sql"
 	"net/http"
+	"time"
 
 	"siakad/backend/internal/response"
 )
 
-type Module struct{}
+type Module struct {
+	db      *sql.DB
+	handler *Handler
+}
 
-func NewModule() Module {
-	return Module{}
+func NewModule(db *sql.DB, tokenSecret string, tokenTTL time.Duration) Module {
+	module := Module{
+		db: db,
+	}
+
+	if db != nil {
+		repo := NewRepository(db)
+		service := NewService(tokenSecret, tokenTTL)
+		module.handler = NewHandler(repo, service)
+	}
+
+	return module
 }
 
 func (Module) Name() string {
@@ -26,14 +41,19 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 			"success": true,
 			"module":  m.Name(),
 			"message": "auth module is ready",
+			"db":      m.db != nil,
 		})
 	})
 
+	if m.handler != nil {
+		m.handler.RegisterRoutes(mux)
+		return
+	}
+
 	mux.HandleFunc("POST /api/v1/auth/login", func(w http.ResponseWriter, r *http.Request) {
-		response.JSON(w, http.StatusNotImplemented, map[string]any{
-			"success": false,
-			"module":  m.Name(),
-			"message": "login handler is not implemented yet",
-		})
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/auth/me", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }

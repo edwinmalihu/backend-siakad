@@ -9,6 +9,7 @@ import (
 
 type Config struct {
 	App   AppConfig
+	Auth  AuthConfig
 	MySQL MySQLConfig
 }
 
@@ -21,6 +22,11 @@ type AppConfig struct {
 	WriteTimeout    time.Duration
 	IdleTimeout     time.Duration
 	ShutdownTimeout time.Duration
+}
+
+type AuthConfig struct {
+	TokenSecret string
+	TokenTTL    time.Duration
 }
 
 func (a AppConfig) Address() string {
@@ -56,6 +62,10 @@ func Load() (Config, error) {
 			IdleTimeout:     getDurationEnv("APP_IDLE_TIMEOUT", 60*time.Second),
 			ShutdownTimeout: getDurationEnv("APP_SHUTDOWN_TIMEOUT", 10*time.Second),
 		},
+		Auth: AuthConfig{
+			TokenSecret: getEnv("AUTH_TOKEN_SECRET", "dev-secret-change-me"),
+			TokenTTL:    getDurationEnv("AUTH_TOKEN_TTL", 24*time.Hour),
+		},
 		MySQL: MySQLConfig{
 			Enabled:         getBoolEnv("MYSQL_ENABLED", true),
 			Host:            getEnv("MYSQL_HOST", "127.0.0.1"),
@@ -84,6 +94,10 @@ func Load() (Config, error) {
 func (c Config) validate() error {
 	if c.App.Port == "" {
 		return fmt.Errorf("APP_PORT is required")
+	}
+
+	if c.Auth.TokenSecret == "" {
+		return fmt.Errorf("AUTH_TOKEN_SECRET is required")
 	}
 
 	if !c.MySQL.Enabled {

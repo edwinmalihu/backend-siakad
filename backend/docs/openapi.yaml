@@ -64,15 +64,65 @@ paths:
   /api/v1/auth/login:
     post:
       tags: [Auth]
-      summary: Placeholder login
-      description: Endpoint login belum diimplementasikan.
+      summary: Login admin atau user aplikasi
+      description: Menghasilkan bearer token untuk sesi frontend admin.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginRequest'
       responses:
-        '501':
-          description: Belum diimplementasikan
+        '200':
+          description: Login berhasil
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotImplementedResponse'
+                $ref: '#/components/schemas/AuthLoginResponse'
+        '400':
+          description: Request tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Username atau password salah
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Akun tidak aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/auth/me:
+    get:
+      tags: [Auth]
+      summary: Ambil profil user yang sedang login
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profil user aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthMeResponse'
+        '401':
+          description: Token invalid atau kadaluarsa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Akun tidak aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /api/v1/master/health:
     get:
@@ -1674,6 +1724,12 @@ paths:
                 $ref: '#/components/schemas/ResourceListResponse'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+
   parameters:
     IDParam:
       in: path
@@ -1767,6 +1823,108 @@ components:
         error:
           type: string
       required: [success, error]
+
+    AuthRole:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Administrator
+        code:
+          type: string
+          example: admin
+      required: [id, name, code]
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        username:
+          type: string
+          example: admin
+        email:
+          type: string
+          example: admin@siakad.local
+        is_active:
+          type: boolean
+        last_login_at:
+          type: string
+          format: date-time
+        full_name:
+          type: string
+          example: Administrator SIAKAD
+        phone:
+          type: string
+          example: "081234567890"
+        photo_url:
+          type: string
+          example: https://example.com/avatar.png
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthRole'
+        role_codes:
+          type: array
+          items:
+            type: string
+            example: admin
+      required: [id, username, is_active, roles, role_codes]
+
+    AuthLoginRequest:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: admin
+          description: Bisa berupa username atau email
+        username:
+          type: string
+          example: admin
+          description: Alternatif lama, tetap didukung bila identifier kosong
+        password:
+          type: string
+          example: Admin123!
+      required: [password]
+
+    AuthLoginResult:
+      type: object
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          example: Bearer
+        expires_at:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/AuthUser'
+      required: [access_token, token_type, expires_at, user]
+
+    AuthLoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/AuthLoginResult'
+      required: [success, data]
+
+    AuthMeResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/AuthUser'
+      required: [success, data]
 
     NotImplementedResponse:
       type: object

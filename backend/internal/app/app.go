@@ -45,7 +45,7 @@ func New() (*App, error) {
 	}
 
 	modules := []httpserver.Module{
-		auth.NewModule(),
+		auth.NewModule(db, cfg.Auth.TokenSecret, cfg.Auth.TokenTTL),
 		master.NewModule(db),
 		studentaffairs.NewModule(),
 		academic.NewModule(db),
