@@ -418,8 +418,27 @@ CREATE TABLE IF NOT EXISTS `student_enrollments` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_student_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `student_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_semester_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `semester_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_student_enrollments_scope` (`student_id`, `academic_year_id`, `semester_id`),
+  UNIQUE KEY `uk_student_enrollments_active_scope` (`active_student_id`, `active_academic_year_id`, `active_semester_id`),
+  KEY `idx_student_enrollments_student_id` (`student_id`),
   KEY `idx_student_enrollments_class_id` (`class_id`),
   KEY `idx_student_enrollments_year_semester` (`academic_year_id`, `semester_id`),
   KEY `idx_student_enrollments_status` (`status`),
@@ -476,8 +495,21 @@ CREATE TABLE IF NOT EXISTS `student_graduations` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_student_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `student_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_student_graduations_student_year` (`student_id`, `academic_year_id`),
+  UNIQUE KEY `uk_student_graduations_active_student_year` (`active_student_id`, `active_academic_year_id`),
+  KEY `idx_student_graduations_student_id` (`student_id`),
   KEY `idx_student_graduations_status` (`status`),
   CONSTRAINT `fk_student_graduations_student_id`
     FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)
@@ -498,8 +530,27 @@ CREATE TABLE IF NOT EXISTS `attendances` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_student_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `student_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_class_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `class_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_attendance_date` DATE GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `attendance_date`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_attendances_student_class_date` (`student_id`, `class_id`, `attendance_date`),
+  UNIQUE KEY `uk_attendances_active_student_class_date` (`active_student_id`, `active_class_id`, `active_attendance_date`),
+  KEY `idx_attendances_student_id` (`student_id`),
   KEY `idx_attendances_class_id_date` (`class_id`, `attendance_date`),
   KEY `idx_attendances_recorded_by` (`recorded_by`),
   CONSTRAINT `fk_attendances_student_id`

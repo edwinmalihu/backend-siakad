@@ -136,6 +136,26 @@ source .env && go run ./cmd/api
 - `GET /api/v1/student-affairs/students/{id}`
 - `PUT /api/v1/student-affairs/students/{id}`
 - `DELETE /api/v1/student-affairs/students/{id}`
+- `GET /api/v1/student-affairs/enrollments`
+- `POST /api/v1/student-affairs/enrollments`
+- `GET /api/v1/student-affairs/enrollments/{id}`
+- `PUT /api/v1/student-affairs/enrollments/{id}`
+- `DELETE /api/v1/student-affairs/enrollments/{id}`
+- `GET /api/v1/student-affairs/mutations`
+- `POST /api/v1/student-affairs/mutations`
+- `GET /api/v1/student-affairs/mutations/{id}`
+- `PUT /api/v1/student-affairs/mutations/{id}`
+- `DELETE /api/v1/student-affairs/mutations/{id}`
+- `GET /api/v1/student-affairs/graduations`
+- `POST /api/v1/student-affairs/graduations`
+- `GET /api/v1/student-affairs/graduations/{id}`
+- `PUT /api/v1/student-affairs/graduations/{id}`
+- `DELETE /api/v1/student-affairs/graduations/{id}`
+- `GET /api/v1/student-affairs/attendances`
+- `POST /api/v1/student-affairs/attendances`
+- `GET /api/v1/student-affairs/attendances/{id}`
+- `PUT /api/v1/student-affairs/attendances/{id}`
+- `DELETE /api/v1/student-affairs/attendances/{id}`
 - `GET /api/v1/academic/health`
 - `GET /api/v1/academic/homeroom-assignments`
 - `POST /api/v1/academic/homeroom-assignments`
@@ -667,4 +687,98 @@ curl -X PUT http://localhost:8080/api/v1/student-affairs/students/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/student-affairs/students/1
+```
+
+## Contoh Request Student Enrollments
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/enrollments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "class_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1,
+    "status": "active"
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/student-affairs/enrollments?academic_year_id=1&semester_id=1&status=active"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/student-affairs/enrollments/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "class_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1,
+    "status": "inactive"
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/student-affairs/enrollments/1
+```
+
+## Contoh Request Student Mutations
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/mutations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "academic_year_id": 1,
+    "semester_id": 1,
+    "mutation_type": "transfer_out",
+    "from_school": "SMK Internal",
+    "to_school": "SMK Tujuan",
+    "reason": "Pindah domisili",
+    "effective_date": "2026-08-01",
+    "status": "pending"
+  }'
+```
+
+## Contoh Request Student Graduations
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/graduations \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "academic_year_id": 1,
+    "graduation_date": "2027-05-20",
+    "status": "graduated",
+    "notes": "Lulus tepat waktu"
+  }'
+```
+
+## Contoh Request Attendances
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/attendances \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "class_id": 1,
+    "attendance_date": "2026-07-15",
+    "status": "present",
+    "notes": "Hadir tepat waktu"
+  }'
 ```

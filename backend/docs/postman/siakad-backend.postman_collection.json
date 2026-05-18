@@ -25,6 +25,22 @@
     {
       "key": "studentId",
       "value": "1"
+    },
+    {
+      "key": "studentEnrollmentId",
+      "value": "1"
+    },
+    {
+      "key": "studentMutationId",
+      "value": "1"
+    },
+    {
+      "key": "studentGraduationId",
+      "value": "1"
+    },
+    {
+      "key": "attendanceId",
+      "value": "1"
     }
   ],
   "item": [
@@ -803,6 +819,240 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/student-affairs/students/{{studentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Enrollments",
+      "item": [
+        {
+          "name": "List Student Enrollments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/enrollments?status=active"
+          }
+        },
+        {
+          "name": "Create Student Enrollment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"class_id\": 1,\n  \"academic_year_id\": {{academicYearId}},\n  \"semester_id\": {{semesterId}},\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/enrollments"
+          }
+        },
+        {
+          "name": "Get Student Enrollment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/enrollments/{{studentEnrollmentId}}"
+          }
+        },
+        {
+          "name": "Update Student Enrollment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"class_id\": 1,\n  \"academic_year_id\": {{academicYearId}},\n  \"semester_id\": {{semesterId}},\n  \"status\": \"inactive\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/enrollments/{{studentEnrollmentId}}"
+          }
+        },
+        {
+          "name": "Delete Student Enrollment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/enrollments/{{studentEnrollmentId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Mutations",
+      "item": [
+        {
+          "name": "List Student Mutations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/mutations?status=pending"
+          }
+        },
+        {
+          "name": "Create Student Mutation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"semester_id\": {{semesterId}},\n  \"mutation_type\": \"transfer_out\",\n  \"from_school\": \"SMK Internal\",\n  \"to_school\": \"SMK Tujuan\",\n  \"reason\": \"Pindah domisili\",\n  \"effective_date\": \"2026-08-01\",\n  \"status\": \"pending\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/mutations"
+          }
+        },
+        {
+          "name": "Get Student Mutation By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/mutations/{{studentMutationId}}"
+          }
+        },
+        {
+          "name": "Update Student Mutation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"semester_id\": {{semesterId}},\n  \"mutation_type\": \"transfer_out\",\n  \"from_school\": \"SMK Internal\",\n  \"to_school\": \"SMK Tujuan\",\n  \"reason\": \"Pindah domisili\",\n  \"effective_date\": \"2026-08-01\",\n  \"status\": \"approved\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/mutations/{{studentMutationId}}"
+          }
+        },
+        {
+          "name": "Delete Student Mutation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/mutations/{{studentMutationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Graduations",
+      "item": [
+        {
+          "name": "List Student Graduations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/graduations?status=graduated"
+          }
+        },
+        {
+          "name": "Create Student Graduation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"graduation_date\": \"2027-05-20\",\n  \"status\": \"graduated\",\n  \"notes\": \"Lulus tepat waktu\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/graduations"
+          }
+        },
+        {
+          "name": "Get Student Graduation By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/graduations/{{studentGraduationId}}"
+          }
+        },
+        {
+          "name": "Update Student Graduation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"graduation_date\": \"2027-05-20\",\n  \"status\": \"pending\",\n  \"notes\": \"Menunggu finalisasi\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/graduations/{{studentGraduationId}}"
+          }
+        },
+        {
+          "name": "Delete Student Graduation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/graduations/{{studentGraduationId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Attendances",
+      "item": [
+        {
+          "name": "List Attendances",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/attendances?status=present"
+          }
+        },
+        {
+          "name": "Create Attendance",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"class_id\": 1,\n  \"attendance_date\": \"2026-07-15\",\n  \"status\": \"present\",\n  \"notes\": \"Hadir tepat waktu\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/attendances"
+          }
+        },
+        {
+          "name": "Get Attendance By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/attendances/{{attendanceId}}"
+          }
+        },
+        {
+          "name": "Update Attendance",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"class_id\": 1,\n  \"attendance_date\": \"2026-07-15\",\n  \"status\": \"late\",\n  \"notes\": \"Datang terlambat\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/attendances/{{attendanceId}}"
+          }
+        },
+        {
+          "name": "Delete Attendance",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/attendances/{{attendanceId}}"
           }
         }
       ]

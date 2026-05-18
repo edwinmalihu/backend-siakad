@@ -1182,6 +1182,624 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/student-affairs/enrollments:
+    get:
+      tags: [Student Affairs]
+      summary: List student enrollments
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan siswa, NIS, kelas, tahun ajaran, atau semester
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter berdasarkan status enrollment
+      responses:
+        '200':
+          description: Daftar enrollment siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentEnrollmentListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat student enrollment baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentEnrollmentWriteRequest'
+      responses:
+        '201':
+          description: Enrollment siswa berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentEnrollmentDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Enrollment duplikat untuk student, academic year, dan semester
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/enrollments/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail student enrollment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail enrollment siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentEnrollmentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update student enrollment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentEnrollmentWriteRequest'
+      responses:
+        '200':
+          description: Enrollment siswa berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentEnrollmentDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Enrollment duplikat untuk student, academic year, dan semester
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus student enrollment
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Enrollment siswa berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/mutations:
+    get:
+      tags: [Student Affairs]
+      summary: List student mutations
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: mutation_type
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar mutasi siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentMutationListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat student mutation baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentMutationWriteRequest'
+      responses:
+        '201':
+          description: Mutasi siswa berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentMutationDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/mutations/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail student mutation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail mutasi siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentMutationDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update student mutation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentMutationWriteRequest'
+      responses:
+        '200':
+          description: Mutasi siswa berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentMutationDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus student mutation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Mutasi siswa berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/graduations:
+    get:
+      tags: [Student Affairs]
+      summary: List student graduations
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar kelulusan siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGraduationListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat student graduation baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentGraduationWriteRequest'
+      responses:
+        '201':
+          description: Data kelulusan berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGraduationDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Kelulusan duplikat untuk siswa dan tahun ajaran
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/graduations/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail student graduation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail kelulusan siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGraduationDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update student graduation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentGraduationWriteRequest'
+      responses:
+        '200':
+          description: Data kelulusan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGraduationDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Kelulusan duplikat untuk siswa dan tahun ajaran
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus student graduation
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Data kelulusan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/attendances:
+    get:
+      tags: [Student Affairs]
+      summary: List attendances
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: attendance_date
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar absensi siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat attendance baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceWriteRequest'
+      responses:
+        '201':
+          description: Absensi berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Absensi duplikat untuk siswa, kelas, dan tanggal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/attendances/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail attendance
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail absensi
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update attendance
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceWriteRequest'
+      responses:
+        '200':
+          description: Absensi berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Absensi duplikat untuk siswa, kelas, dan tanggal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus attendance
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Absensi berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/academic/health:
     get:
       tags: [Academic]
@@ -3143,6 +3761,455 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Student'
+      required: [success, data]
+
+    StudentEnrollment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+          example: 2026001
+        student_full_name:
+          type: string
+          example: Andi Saputra
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+          example: A
+        department_code:
+          type: string
+          example: RPL
+        department_name:
+          type: string
+          example: Rekayasa Perangkat Lunak
+        grade_level_code:
+          type: string
+          example: X
+        grade_level_name:
+          type: string
+          example: Kelas 10
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2026/2027
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+          example: GANJIL
+        semester_name:
+          type: string
+          example: Semester Ganjil
+        status:
+          type: string
+          example: active
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - class_id
+        - class_name
+        - department_code
+        - department_name
+        - grade_level_code
+        - grade_level_name
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - status
+        - created_at
+        - updated_at
+
+    StudentEnrollmentWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+          example: 1
+        class_id:
+          type: integer
+          format: uint64
+          example: 1
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        semester_id:
+          type: integer
+          format: uint64
+          example: 1
+        status:
+          type: string
+          example: active
+      required: [student_id, class_id, academic_year_id, semester_id]
+
+    StudentEnrollmentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentEnrollment'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentEnrollmentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StudentEnrollment'
+      required: [success, data]
+
+    StudentMutation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+        student_full_name:
+          type: string
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+        semester_name:
+          type: string
+        mutation_type:
+          type: string
+        from_school:
+          type: string
+          nullable: true
+        to_school:
+          type: string
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+        effective_date:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - mutation_type
+        - status
+        - created_at
+        - updated_at
+
+    StudentMutationWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        academic_year_id:
+          type: integer
+          format: uint64
+        semester_id:
+          type: integer
+          format: uint64
+        mutation_type:
+          type: string
+          example: transfer_out
+        from_school:
+          type: string
+        to_school:
+          type: string
+        reason:
+          type: string
+        effective_date:
+          type: string
+          format: date
+        status:
+          type: string
+          example: pending
+      required: [student_id, academic_year_id, semester_id, mutation_type]
+
+    StudentMutationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentMutation'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentMutationDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StudentMutation'
+      required: [success, data]
+
+    StudentGraduation:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+        student_full_name:
+          type: string
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+        graduation_date:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - academic_year_id
+        - academic_year_name
+        - status
+        - created_at
+        - updated_at
+
+    StudentGraduationWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        academic_year_id:
+          type: integer
+          format: uint64
+        graduation_date:
+          type: string
+          format: date
+        status:
+          type: string
+          example: graduated
+        notes:
+          type: string
+      required: [student_id, academic_year_id]
+
+    StudentGraduationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentGraduation'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentGraduationDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StudentGraduation'
+      required: [success, data]
+
+    Attendance:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+        student_full_name:
+          type: string
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+        department_code:
+          type: string
+        department_name:
+          type: string
+        grade_level_code:
+          type: string
+        grade_level_name:
+          type: string
+        attendance_date:
+          type: string
+          format: date-time
+        status:
+          type: string
+        notes:
+          type: string
+          nullable: true
+        recorded_by:
+          type: integer
+          format: uint64
+          nullable: true
+        recorded_by_name:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - class_id
+        - class_name
+        - department_code
+        - department_name
+        - grade_level_code
+        - grade_level_name
+        - attendance_date
+        - status
+        - created_at
+        - updated_at
+
+    AttendanceWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        class_id:
+          type: integer
+          format: uint64
+        attendance_date:
+          type: string
+          format: date
+        status:
+          type: string
+          example: present
+        notes:
+          type: string
+        recorded_by:
+          type: integer
+          format: uint64
+      required: [student_id, class_id, attendance_date, status]
+
+    AttendanceListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attendance'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    AttendanceDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Attendance'
       required: [success, data]
 
     Subject:
