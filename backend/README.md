@@ -131,6 +131,11 @@ source .env && go run ./cmd/api
 - `PUT /api/v1/master/semesters/{id}`
 - `DELETE /api/v1/master/semesters/{id}`
 - `GET /api/v1/student-affairs/health`
+- `GET /api/v1/student-affairs/students`
+- `POST /api/v1/student-affairs/students`
+- `GET /api/v1/student-affairs/students/{id}`
+- `PUT /api/v1/student-affairs/students/{id}`
+- `DELETE /api/v1/student-affairs/students/{id}`
 - `GET /api/v1/academic/health`
 - `GET /api/v1/academic/homeroom-assignments`
 - `POST /api/v1/academic/homeroom-assignments`
@@ -610,4 +615,56 @@ curl -X PUT http://localhost:8080/api/v1/master/semesters/1 \
 
 ```bash
 curl -X DELETE http://localhost:8080/api/v1/master/semesters/1
+```
+
+## Contoh Request Students
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/students \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nis": "2026001",
+    "nisn": "9988776655",
+    "full_name": "Andi Saputra",
+    "gender": "male",
+    "birth_place": "Padang",
+    "birth_date": "2010-01-12",
+    "address": "Jalan Merdeka",
+    "phone": "081234567890",
+    "entry_year": 2026,
+    "status": "active"
+  }'
+```
+
+### List
+
+```bash
+curl "http://localhost:8080/api/v1/student-affairs/students?search=Andi&gender=male&status=active&entry_year=2026"
+```
+
+### Update
+
+```bash
+curl -X PUT http://localhost:8080/api/v1/student-affairs/students/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nis": "2026001",
+    "nisn": "9988776655",
+    "full_name": "Andi Saputra",
+    "gender": "male",
+    "birth_place": "Padang",
+    "birth_date": "2010-01-12",
+    "address": "Jalan Sudirman",
+    "phone": "081234567891",
+    "entry_year": 2026,
+    "status": "active"
+  }'
+```
+
+### Delete
+
+```bash
+curl -X DELETE http://localhost:8080/api/v1/student-affairs/students/1
 ```

@@ -1029,6 +1029,159 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResourceListResponse'
 
+  /api/v1/student-affairs/students:
+    get:
+      tags: [Student Affairs]
+      summary: List students
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan NIS, NISN, nama siswa, atau nomor telepon
+        - in: query
+          name: gender
+          schema:
+            type: string
+            enum: [male, female]
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: Filter berdasarkan status siswa
+        - in: query
+          name: entry_year
+          schema:
+            type: integer
+          description: Filter berdasarkan tahun masuk
+      responses:
+        '200':
+          description: Daftar siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat student baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentWriteRequest'
+      responses:
+        '201':
+          description: Siswa berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: NIS atau NISN sudah digunakan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/students/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail student
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update student
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentWriteRequest'
+      responses:
+        '200':
+          description: Siswa berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: NIS atau NISN sudah digunakan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus student
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Siswa berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/academic/health:
     get:
       tags: [Academic]
@@ -1947,6 +2100,15 @@ components:
           type: string
       required: [success, message]
 
+    MessageResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required: [success, message]
+
     AcademicYear:
       type: object
       properties:
@@ -2856,6 +3018,131 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Schedule'
+      required: [success, data]
+
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        nis:
+          type: string
+          example: 2026001
+        nisn:
+          type: string
+          nullable: true
+          example: 9988776655
+        full_name:
+          type: string
+          example: Andi Saputra
+        gender:
+          type: string
+          enum: [male, female]
+        birth_place:
+          type: string
+          nullable: true
+          example: Padang
+        birth_date:
+          type: string
+          format: date-time
+          nullable: true
+        address:
+          type: string
+          nullable: true
+          example: Jalan Merdeka
+        phone:
+          type: string
+          nullable: true
+          example: 081234567890
+        entry_year:
+          type: integer
+          example: 2026
+        status:
+          type: string
+          example: active
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - nis
+        - full_name
+        - gender
+        - entry_year
+        - status
+        - created_at
+        - updated_at
+
+    StudentWriteRequest:
+      type: object
+      properties:
+        nis:
+          type: string
+          example: 2026001
+        nisn:
+          type: string
+          example: 9988776655
+        full_name:
+          type: string
+          example: Andi Saputra
+        gender:
+          type: string
+          enum: [male, female]
+        birth_place:
+          type: string
+          example: Padang
+        birth_date:
+          type: string
+          format: date
+          example: 2010-01-12
+        address:
+          type: string
+          example: Jalan Merdeka
+        phone:
+          type: string
+          example: 081234567890
+        entry_year:
+          type: integer
+          minimum: 1901
+          maximum: 2155
+          example: 2026
+        status:
+          type: string
+          example: active
+      required: [nis, full_name, gender, entry_year]
+
+    StudentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Student'
       required: [success, data]
 
     Subject:

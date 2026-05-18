@@ -21,6 +21,10 @@
     {
       "key": "authToken",
       "value": ""
+    },
+    {
+      "key": "studentId",
+      "value": "1"
     }
   ],
   "item": [
@@ -736,6 +740,69 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/academic/schedules/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Students",
+      "item": [
+        {
+          "name": "List Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/students?search=Andi&gender=male&status=active&entry_year=2026"
+          }
+        },
+        {
+          "name": "Create Student",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nis\": \"2026001\",\n  \"nisn\": \"9988776655\",\n  \"full_name\": \"Andi Saputra\",\n  \"gender\": \"male\",\n  \"birth_place\": \"Padang\",\n  \"birth_date\": \"2010-01-12\",\n  \"address\": \"Jalan Merdeka\",\n  \"phone\": \"081234567890\",\n  \"entry_year\": 2026,\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/students"
+          }
+        },
+        {
+          "name": "Get Student By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/students/{{studentId}}"
+          }
+        },
+        {
+          "name": "Update Student",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nis\": \"2026001\",\n  \"nisn\": \"9988776655\",\n  \"full_name\": \"Andi Saputra\",\n  \"gender\": \"male\",\n  \"birth_place\": \"Padang\",\n  \"birth_date\": \"2010-01-12\",\n  \"address\": \"Jalan Sudirman\",\n  \"phone\": \"081234567891\",\n  \"entry_year\": 2026,\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/students/{{studentId}}"
+          }
+        },
+        {
+          "name": "Delete Student",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/students/{{studentId}}"
           }
         }
       ]

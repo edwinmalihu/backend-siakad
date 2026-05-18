@@ -1,15 +1,28 @@
 package studentaffairs
 
 import (
+	"database/sql"
 	"net/http"
 
+	"siakad/backend/internal/modules/studentaffairs/students"
 	"siakad/backend/internal/response"
 )
 
-type Module struct{}
+type Module struct {
+	db             *sql.DB
+	studentHandler *students.Handler
+}
 
-func NewModule() Module {
-	return Module{}
+func NewModule(db *sql.DB) Module {
+	module := Module{
+		db: db,
+	}
+
+	if db != nil {
+		module.studentHandler = students.NewHandler(db)
+	}
+
+	return module
 }
 
 func (Module) Name() string {
@@ -26,6 +39,7 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 			"success": true,
 			"module":  m.Name(),
 			"message": "student affairs module is ready",
+			"db":      m.db != nil,
 		})
 	})
 
@@ -43,5 +57,26 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 				"extracurriculars",
 			},
 		})
+	})
+
+	if m.studentHandler != nil {
+		m.studentHandler.RegisterRoutes(mux)
+		return
+	}
+
+	mux.HandleFunc("GET /api/v1/student-affairs/students", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/student-affairs/students", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/student-affairs/students/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/student-affairs/students/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/student-affairs/students/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }
