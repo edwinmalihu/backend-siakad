@@ -5,6 +5,8 @@ import (
 	"net/http"
 
 	"siakad/backend/internal/modules/studentaffairs/attendances"
+	"siakad/backend/internal/modules/studentaffairs/disciplinecategories"
+	"siakad/backend/internal/modules/studentaffairs/disciplinerecords"
 	"siakad/backend/internal/modules/studentaffairs/studentenrollments"
 	"siakad/backend/internal/modules/studentaffairs/studentgraduations"
 	"siakad/backend/internal/modules/studentaffairs/studentmutations"
@@ -13,12 +15,14 @@ import (
 )
 
 type Module struct {
-	db                       *sql.DB
-	attendanceHandler        *attendances.Handler
-	studentGraduationHandler *studentgraduations.Handler
-	studentHandler           *students.Handler
-	studentEnrollmentHandler *studentenrollments.Handler
-	studentMutationHandler   *studentmutations.Handler
+	db                        *sql.DB
+	attendanceHandler         *attendances.Handler
+	disciplineCategoryHandler *disciplinecategories.Handler
+	disciplineRecordHandler   *disciplinerecords.Handler
+	studentGraduationHandler  *studentgraduations.Handler
+	studentHandler            *students.Handler
+	studentEnrollmentHandler  *studentenrollments.Handler
+	studentMutationHandler    *studentmutations.Handler
 }
 
 func NewModule(db *sql.DB) Module {
@@ -28,6 +32,8 @@ func NewModule(db *sql.DB) Module {
 
 	if db != nil {
 		module.attendanceHandler = attendances.NewHandler(db)
+		module.disciplineCategoryHandler = disciplinecategories.NewHandler(db)
+		module.disciplineRecordHandler = disciplinerecords.NewHandler(db)
 		module.studentGraduationHandler = studentgraduations.NewHandler(db)
 		module.studentHandler = students.NewHandler(db)
 		module.studentEnrollmentHandler = studentenrollments.NewHandler(db)
@@ -65,6 +71,7 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 				"student_mutations",
 				"student_graduations",
 				"attendances",
+				"discipline_categories",
 				"discipline_records",
 				"extracurriculars",
 			},
@@ -86,12 +93,20 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 	if m.attendanceHandler != nil {
 		m.attendanceHandler.RegisterRoutes(mux)
 	}
+	if m.disciplineCategoryHandler != nil {
+		m.disciplineCategoryHandler.RegisterRoutes(mux)
+	}
+	if m.disciplineRecordHandler != nil {
+		m.disciplineRecordHandler.RegisterRoutes(mux)
+	}
 
 	if m.studentHandler != nil &&
 		m.studentEnrollmentHandler != nil &&
 		m.studentMutationHandler != nil &&
 		m.studentGraduationHandler != nil &&
-		m.attendanceHandler != nil {
+		m.attendanceHandler != nil &&
+		m.disciplineCategoryHandler != nil &&
+		m.disciplineRecordHandler != nil {
 		return
 	}
 
@@ -168,6 +183,36 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 	mux.HandleFunc("DELETE /api/v1/student-affairs/attendances/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/student-affairs/discipline-categories", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/student-affairs/discipline-categories", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/student-affairs/discipline-categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/student-affairs/discipline-categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/student-affairs/discipline-categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/student-affairs/discipline-records", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/student-affairs/discipline-records", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/student-affairs/discipline-records/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/student-affairs/discipline-records/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/student-affairs/discipline-records/{id}", func(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }

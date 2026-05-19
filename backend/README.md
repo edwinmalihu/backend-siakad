@@ -156,6 +156,16 @@ source .env && go run ./cmd/api
 - `GET /api/v1/student-affairs/attendances/{id}`
 - `PUT /api/v1/student-affairs/attendances/{id}`
 - `DELETE /api/v1/student-affairs/attendances/{id}`
+- `GET /api/v1/student-affairs/discipline-categories`
+- `POST /api/v1/student-affairs/discipline-categories`
+- `GET /api/v1/student-affairs/discipline-categories/{id}`
+- `PUT /api/v1/student-affairs/discipline-categories/{id}`
+- `DELETE /api/v1/student-affairs/discipline-categories/{id}`
+- `GET /api/v1/student-affairs/discipline-records`
+- `POST /api/v1/student-affairs/discipline-records`
+- `GET /api/v1/student-affairs/discipline-records/{id}`
+- `PUT /api/v1/student-affairs/discipline-records/{id}`
+- `DELETE /api/v1/student-affairs/discipline-records/{id}`
 - `GET /api/v1/academic/health`
 - `GET /api/v1/academic/homeroom-assignments`
 - `POST /api/v1/academic/homeroom-assignments`
@@ -780,5 +790,35 @@ curl -X POST http://localhost:8080/api/v1/student-affairs/attendances \
     "attendance_date": "2026-07-15",
     "status": "present",
     "notes": "Hadir tepat waktu"
+  }'
+```
+
+## Contoh Request Discipline Categories
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/discipline-categories \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Terlambat",
+    "point": 10,
+    "description": "Dipakai saat siswa datang melewati batas waktu masuk."
+  }'
+```
+
+## Contoh Request Discipline Records
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/discipline-records \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "discipline_category_id": 1,
+    "incident_date": "2026-07-16",
+    "description": "Datang terlambat 20 menit tanpa keterangan.",
+    "action_taken": "Pembinaan singkat dan pencatatan poin."
   }'
 ```

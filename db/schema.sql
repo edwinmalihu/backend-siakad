@@ -572,8 +572,14 @@ CREATE TABLE IF NOT EXISTS `discipline_categories` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_name` VARCHAR(100) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_discipline_categories_name` (`name`)
+  UNIQUE KEY `uk_discipline_categories_active_name` (`active_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `discipline_records` (

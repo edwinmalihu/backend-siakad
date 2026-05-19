@@ -1800,6 +1800,277 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/student-affairs/discipline-categories:
+    get:
+      tags: [Student Affairs]
+      summary: List discipline categories
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar kategori disiplin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineCategoryListResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat discipline category baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineCategoryWriteRequest'
+      responses:
+        '201':
+          description: Kategori disiplin berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineCategoryDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama kategori sudah digunakan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/discipline-categories/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail discipline category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail kategori disiplin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineCategoryDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update discipline category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineCategoryWriteRequest'
+      responses:
+        '200':
+          description: Kategori disiplin berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineCategoryDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama kategori sudah digunakan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus discipline category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Kategori disiplin berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/discipline-records:
+    get:
+      tags: [Student Affairs]
+      summary: List discipline records
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: discipline_category_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: incident_date
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Daftar catatan disiplin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineRecordListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Student Affairs]
+      summary: Buat discipline record baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineRecordWriteRequest'
+      responses:
+        '201':
+          description: Catatan disiplin berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineRecordDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/student-affairs/discipline-records/{id}:
+    get:
+      tags: [Student Affairs]
+      summary: Detail discipline record
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail catatan disiplin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineRecordDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Student Affairs]
+      summary: Update discipline record
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisciplineRecordWriteRequest'
+      responses:
+        '200':
+          description: Catatan disiplin berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DisciplineRecordDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Student Affairs]
+      summary: Hapus discipline record
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Catatan disiplin berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/academic/health:
     get:
       tags: [Academic]
@@ -4210,6 +4481,177 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Attendance'
+      required: [success, data]
+
+    DisciplineCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Terlambat
+        point:
+          type: integer
+          example: 10
+        description:
+          type: string
+          nullable: true
+          example: Digunakan untuk keterlambatan masuk kelas atau apel.
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, name, point, created_at, updated_at]
+
+    DisciplineCategoryWriteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Seragam tidak lengkap
+        point:
+          type: integer
+          example: 25
+        description:
+          type: string
+          example: Dipakai saat siswa tidak memenuhi standar atribut dan seragam.
+      required: [name, point]
+
+    DisciplineCategoryListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisciplineCategory'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    DisciplineCategoryDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/DisciplineCategory'
+      required: [success, data]
+
+    DisciplineRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+          example: S-001
+        student_full_name:
+          type: string
+          example: Budi Santoso
+        discipline_category_id:
+          type: integer
+          format: uint64
+        discipline_category_name:
+          type: string
+          example: Terlambat
+        point:
+          type: integer
+          example: 10
+        recorded_by:
+          type: integer
+          format: uint64
+          nullable: true
+        recorded_by_name:
+          type: string
+          nullable: true
+          example: Administrator SIAKAD
+        incident_date:
+          type: string
+          format: date
+        description:
+          type: string
+          nullable: true
+        action_taken:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - discipline_category_id
+        - discipline_category_name
+        - point
+        - incident_date
+        - created_at
+        - updated_at
+
+    DisciplineRecordWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        discipline_category_id:
+          type: integer
+          format: uint64
+        recorded_by:
+          type: integer
+          format: uint64
+          nullable: true
+        incident_date:
+          type: string
+          format: date
+        description:
+          type: string
+        action_taken:
+          type: string
+      required: [student_id, discipline_category_id, incident_date]
+
+    DisciplineRecordListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisciplineRecord'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    DisciplineRecordDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/DisciplineRecord'
       required: [success, data]
 
     Subject:

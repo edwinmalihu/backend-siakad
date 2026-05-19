@@ -41,6 +41,14 @@
     {
       "key": "attendanceId",
       "value": "1"
+    },
+    {
+      "key": "disciplineCategoryId",
+      "value": "1"
+    },
+    {
+      "key": "disciplineRecordId",
+      "value": "1"
     }
   ],
   "item": [
@@ -902,7 +910,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -924,7 +935,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -959,7 +973,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -981,7 +998,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1016,7 +1036,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1038,7 +1061,10 @@
           "request": {
             "method": "PUT",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -1053,6 +1079,132 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/student-affairs/attendances/{{attendanceId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Discipline Categories",
+      "item": [
+        {
+          "name": "List Discipline Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-categories?search=terlambat"
+          }
+        },
+        {
+          "name": "Create Discipline Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Terlambat\",\n  \"point\": 10,\n  \"description\": \"Dipakai saat siswa datang melewati batas waktu masuk.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-categories"
+          }
+        },
+        {
+          "name": "Get Discipline Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-categories/{{disciplineCategoryId}}"
+          }
+        },
+        {
+          "name": "Update Discipline Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Terlambat Berat\",\n  \"point\": 20,\n  \"description\": \"Kategori keterlambatan yang membutuhkan pembinaan lanjutan.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-categories/{{disciplineCategoryId}}"
+          }
+        },
+        {
+          "name": "Delete Discipline Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-categories/{{disciplineCategoryId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Discipline Records",
+      "item": [
+        {
+          "name": "List Discipline Records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records?discipline_category_id={{disciplineCategoryId}}"
+          }
+        },
+        {
+          "name": "Create Discipline Record",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"discipline_category_id\": {{disciplineCategoryId}},\n  \"incident_date\": \"2026-07-16\",\n  \"description\": \"Datang terlambat 20 menit tanpa keterangan.\",\n  \"action_taken\": \"Pembinaan singkat dan pencatatan poin.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records"
+          }
+        },
+        {
+          "name": "Get Discipline Record By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records/{{disciplineRecordId}}"
+          }
+        },
+        {
+          "name": "Update Discipline Record",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"discipline_category_id\": {{disciplineCategoryId}},\n  \"incident_date\": \"2026-07-16\",\n  \"description\": \"Terlambat karena terlambat masuk gerbang sekolah.\",\n  \"action_taken\": \"Panggilan wali kelas dan pembinaan tertulis.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records/{{disciplineRecordId}}"
+          }
+        },
+        {
+          "name": "Delete Discipline Record",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records/{{disciplineRecordId}}"
           }
         }
       ]
