@@ -618,8 +618,14 @@ CREATE TABLE IF NOT EXISTS `extracurriculars` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_name` VARCHAR(150) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_extracurriculars_name` (`name`),
+  UNIQUE KEY `uk_extracurriculars_active_name` (`active_name`),
   KEY `idx_extracurriculars_coach_teacher_id` (`coach_teacher_id`),
   KEY `idx_extracurriculars_is_active` (`is_active`),
   CONSTRAINT `fk_extracurriculars_coach_teacher_id`
@@ -636,8 +642,27 @@ CREATE TABLE IF NOT EXISTS `extracurricular_members` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_extracurricular_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `extracurricular_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_student_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `student_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
+  `active_academic_year_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `academic_year_id`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_extracurricular_members_scope` (`extracurricular_id`, `student_id`, `academic_year_id`),
+  UNIQUE KEY `uk_extracurricular_members_active_scope` (`active_extracurricular_id`, `active_student_id`, `active_academic_year_id`),
+  KEY `idx_extracurricular_members_extracurricular_id` (`extracurricular_id`),
   KEY `idx_extracurricular_members_student_id` (`student_id`),
   KEY `idx_extracurricular_members_academic_year_id` (`academic_year_id`),
   CONSTRAINT `fk_extracurricular_members_extracurricular_id`

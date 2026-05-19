@@ -166,6 +166,16 @@ source .env && go run ./cmd/api
 - `GET /api/v1/student-affairs/discipline-records/{id}`
 - `PUT /api/v1/student-affairs/discipline-records/{id}`
 - `DELETE /api/v1/student-affairs/discipline-records/{id}`
+- `GET /api/v1/student-affairs/extracurriculars`
+- `POST /api/v1/student-affairs/extracurriculars`
+- `GET /api/v1/student-affairs/extracurriculars/{id}`
+- `PUT /api/v1/student-affairs/extracurriculars/{id}`
+- `DELETE /api/v1/student-affairs/extracurriculars/{id}`
+- `GET /api/v1/student-affairs/extracurricular-members`
+- `POST /api/v1/student-affairs/extracurricular-members`
+- `GET /api/v1/student-affairs/extracurricular-members/{id}`
+- `PUT /api/v1/student-affairs/extracurricular-members/{id}`
+- `DELETE /api/v1/student-affairs/extracurricular-members/{id}`
 - `GET /api/v1/academic/health`
 - `GET /api/v1/academic/homeroom-assignments`
 - `POST /api/v1/academic/homeroom-assignments`
@@ -820,5 +830,35 @@ curl -X POST http://localhost:8080/api/v1/student-affairs/discipline-records \
     "incident_date": "2026-07-16",
     "description": "Datang terlambat 20 menit tanpa keterangan.",
     "action_taken": "Pembinaan singkat dan pencatatan poin."
+  }'
+```
+
+## Contoh Request Extracurriculars
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/extracurriculars \
+  -H "Content-Type: application/json" \
+  -d '{
+    "coach_teacher_id": 1,
+    "name": "Basket",
+    "description": "Pembinaan olahraga basket untuk siswa lintas tingkat.",
+    "is_active": true
+  }'
+```
+
+## Contoh Request Extracurricular Members
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/student-affairs/extracurricular-members \
+  -H "Content-Type: application/json" \
+  -d '{
+    "extracurricular_id": 1,
+    "student_id": 1,
+    "academic_year_id": 1,
+    "status": "active"
   }'
 ```

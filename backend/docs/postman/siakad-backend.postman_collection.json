@@ -49,6 +49,18 @@
     {
       "key": "disciplineRecordId",
       "value": "1"
+    },
+    {
+      "key": "teacherId",
+      "value": "1"
+    },
+    {
+      "key": "extracurricularId",
+      "value": "1"
+    },
+    {
+      "key": "extracurricularMemberId",
+      "value": "1"
     }
   ],
   "item": [
@@ -1205,6 +1217,132 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/student-affairs/discipline-records/{{disciplineRecordId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Extracurriculars",
+      "item": [
+        {
+          "name": "List Extracurriculars",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurriculars?is_active=true"
+          }
+        },
+        {
+          "name": "Create Extracurricular",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coach_teacher_id\": {{teacherId}},\n  \"name\": \"Basket\",\n  \"description\": \"Pembinaan olahraga basket untuk siswa lintas tingkat.\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurriculars"
+          }
+        },
+        {
+          "name": "Get Extracurricular By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurriculars/{{extracurricularId}}"
+          }
+        },
+        {
+          "name": "Update Extracurricular",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"coach_teacher_id\": {{teacherId}},\n  \"name\": \"Basket Prestasi\",\n  \"description\": \"Fokus pembinaan tim inti dan kompetisi.\",\n  \"is_active\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurriculars/{{extracurricularId}}"
+          }
+        },
+        {
+          "name": "Delete Extracurricular",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurriculars/{{extracurricularId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Student Affairs - Extracurricular Members",
+      "item": [
+        {
+          "name": "List Extracurricular Members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members?status=active"
+          }
+        },
+        {
+          "name": "Create Extracurricular Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"extracurricular_id\": {{extracurricularId}},\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members"
+          }
+        },
+        {
+          "name": "Get Extracurricular Member By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members/{{extracurricularMemberId}}"
+          }
+        },
+        {
+          "name": "Update Extracurricular Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"extracurricular_id\": {{extracurricularId}},\n  \"student_id\": {{studentId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"status\": \"inactive\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members/{{extracurricularMemberId}}"
+          }
+        },
+        {
+          "name": "Delete Extracurricular Member",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members/{{extracurricularMemberId}}"
           }
         }
       ]
