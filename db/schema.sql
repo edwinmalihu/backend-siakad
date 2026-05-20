@@ -888,8 +888,14 @@ CREATE TABLE IF NOT EXISTS `industry_categories` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_name` VARCHAR(150) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_industry_categories_name` (`name`)
+  UNIQUE KEY `uk_industry_categories_active_name` (`active_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `companies` (
@@ -905,8 +911,14 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
+  `active_name` VARCHAR(200) GENERATED ALWAYS AS (
+    CASE
+      WHEN `deleted_at` IS NULL THEN `name`
+      ELSE NULL
+    END
+  ) VIRTUAL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_companies_name` (`name`),
+  UNIQUE KEY `uk_companies_active_name` (`active_name`),
   KEY `idx_companies_category_id` (`category_id`),
   KEY `idx_companies_city` (`city`),
   KEY `idx_companies_status` (`status`),
@@ -964,6 +976,9 @@ CREATE TABLE IF NOT EXISTS `internship_logs` (
 CREATE TABLE IF NOT EXISTS `alumni` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `student_id` BIGINT UNSIGNED NOT NULL,
+  `active_student_id` BIGINT UNSIGNED GENERATED ALWAYS AS (
+    CASE WHEN `deleted_at` IS NULL THEN `student_id` ELSE NULL END
+  ) VIRTUAL,
   `graduation_year` YEAR NOT NULL,
   `current_activity` VARCHAR(150) DEFAULT NULL,
   `company_name` VARCHAR(200) DEFAULT NULL,
@@ -974,7 +989,8 @@ CREATE TABLE IF NOT EXISTS `alumni` (
   `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `deleted_at` DATETIME DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_alumni_student_id` (`student_id`),
+  UNIQUE KEY `uk_alumni_active_student_id` (`active_student_id`),
+  KEY `idx_alumni_student_id` (`student_id`),
   KEY `idx_alumni_graduation_year` (`graduation_year`),
   CONSTRAINT `fk_alumni_student_id`
     FOREIGN KEY (`student_id`) REFERENCES `students` (`id`)

@@ -61,6 +61,22 @@
     {
       "key": "extracurricularMemberId",
       "value": "1"
+    },
+    {
+      "key": "industryCategoryId",
+      "value": "1"
+    },
+    {
+      "key": "companyId",
+      "value": "1"
+    },
+    {
+      "key": "internshipId",
+      "value": "1"
+    },
+    {
+      "key": "alumniId",
+      "value": "1"
     }
   ],
   "item": [
@@ -1343,6 +1359,258 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/student-affairs/extracurricular-members/{{extracurricularMemberId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industry Relations - Categories",
+      "item": [
+        {
+          "name": "List Industry Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/categories?search=software"
+          }
+        },
+        {
+          "name": "Create Industry Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Software House\",\n  \"description\": \"Mitra industri yang bergerak di pengembangan perangkat lunak.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/categories"
+          }
+        },
+        {
+          "name": "Get Industry Category By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/categories/{{industryCategoryId}}"
+          }
+        },
+        {
+          "name": "Update Industry Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Software & IT Services\",\n  \"description\": \"Kategori untuk software house, consultant, dan layanan digital.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/categories/{{industryCategoryId}}"
+          }
+        },
+        {
+          "name": "Delete Industry Category",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/categories/{{industryCategoryId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industry Relations - Companies",
+      "item": [
+        {
+          "name": "List Companies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/companies?status=active"
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": {{industryCategoryId}},\n  \"name\": \"PT Nusantara Digital\",\n  \"city\": \"Padang\",\n  \"address\": \"Jl. Veteran No. 10\",\n  \"contact_person\": \"Rani Putri\",\n  \"phone\": \"0751-123456\",\n  \"email\": \"partnership@nusantaradigital.id\",\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/companies"
+          }
+        },
+        {
+          "name": "Get Company By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/companies/{{companyId}}"
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_id\": {{industryCategoryId}},\n  \"name\": \"PT Nusantara Digital Utama\",\n  \"city\": \"Padang\",\n  \"address\": \"Jl. Veteran No. 10\",\n  \"contact_person\": \"Rani Putri\",\n  \"phone\": \"0751-123456\",\n  \"email\": \"partnership@nusantaradigital.id\",\n  \"status\": \"active\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/companies/{{companyId}}"
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/companies/{{companyId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industry Relations - Internships",
+      "item": [
+        {
+          "name": "List Internships",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internships?status=planned"
+          }
+        },
+        {
+          "name": "Create Internship",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"company_id\": {{companyId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"start_date\": \"2026-08-01\",\n  \"end_date\": \"2026-10-31\",\n  \"mentor_name\": \"Bapak Andi\",\n  \"status\": \"planned\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/internships"
+          }
+        },
+        {
+          "name": "Get Internship By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internships/{{internshipId}}"
+          }
+        },
+        {
+          "name": "Update Internship",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"company_id\": {{companyId}},\n  \"academic_year_id\": {{academicYearId}},\n  \"start_date\": \"2026-08-01\",\n  \"end_date\": \"2026-10-31\",\n  \"mentor_name\": \"Bapak Andi\",\n  \"status\": \"running\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/internships/{{internshipId}}"
+          }
+        },
+        {
+          "name": "Delete Internship",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internships/{{internshipId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industry Relations - Alumni",
+      "item": [
+        {
+          "name": "List Alumni",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/alumni?current_activity=working"
+          }
+        },
+        {
+          "name": "Create Alumnus",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"graduation_year\": 2026,\n  \"current_activity\": \"working\",\n  \"company_name\": \"PT Nusantara Digital\",\n  \"college_name\": \"\",\n  \"phone\": \"081234567890\",\n  \"email\": \"alumni@example.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/alumni"
+          }
+        },
+        {
+          "name": "Get Alumnus By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/alumni/{{alumniId}}"
+          }
+        },
+        {
+          "name": "Update Alumnus",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": {{studentId}},\n  \"graduation_year\": 2026,\n  \"current_activity\": \"college\",\n  \"company_name\": \"\",\n  \"college_name\": \"Politeknik Negeri Padang\",\n  \"phone\": \"081234567890\",\n  \"email\": \"alumni@example.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/alumni/{{alumniId}}"
+          }
+        },
+        {
+          "name": "Delete Alumnus",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/alumni/{{alumniId}}"
           }
         }
       ]

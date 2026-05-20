@@ -3019,6 +3019,563 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/industry-relations/categories:
+    get:
+      tags: [Industry Relations]
+      summary: List industry categories
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar kategori industri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryCategoryListResponse'
+    post:
+      tags: [Industry Relations]
+      summary: Buat industry category baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndustryCategoryWriteRequest'
+      responses:
+        '201':
+          description: Kategori industri berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryCategoryDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama kategori bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/categories/{id}:
+    get:
+      tags: [Industry Relations]
+      summary: Detail industry category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail kategori industri
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryCategoryDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Industry Relations]
+      summary: Update industry category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IndustryCategoryWriteRequest'
+      responses:
+        '200':
+          description: Kategori industri berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IndustryCategoryDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama kategori bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Industry Relations]
+      summary: Hapus industry category
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Kategori industri berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/companies:
+    get:
+      tags: [Industry Relations]
+      summary: List companies
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: category_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: city
+          schema:
+            type: string
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar perusahaan mitra
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Industry Relations]
+      summary: Buat company baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyWriteRequest'
+      responses:
+        '201':
+          description: Perusahaan berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDetailResponse'
+        '400':
+          description: Payload invalid atau kategori tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama perusahaan bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/companies/{id}:
+    get:
+      tags: [Industry Relations]
+      summary: Detail company
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail perusahaan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Industry Relations]
+      summary: Update company
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyWriteRequest'
+      responses:
+        '200':
+          description: Perusahaan berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyDetailResponse'
+        '400':
+          description: Payload invalid atau kategori tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama perusahaan bentrok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Industry Relations]
+      summary: Hapus company
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Perusahaan berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/internships:
+    get:
+      tags: [Industry Relations]
+      summary: List internships
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: company_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: status
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar prakerin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Industry Relations]
+      summary: Buat internship baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipWriteRequest'
+      responses:
+        '201':
+          description: Prakerin berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/internships/{id}:
+    get:
+      tags: [Industry Relations]
+      summary: Detail internship
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail prakerin
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/alumni:
+    get:
+      tags: [Industry Relations]
+      summary: List alumni
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: graduation_year
+          schema:
+            type: integer
+        - in: query
+          name: current_activity
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Daftar alumni
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Industry Relations]
+      summary: Buat data alumni baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniWriteRequest'
+      responses:
+        '201':
+          description: Data alumni berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniDetailResponse'
+        '400':
+          description: Payload invalid atau siswa tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/industry-relations/alumni/{id}:
+    get:
+      tags: [Industry Relations]
+      summary: Detail alumni
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail alumni
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Industry Relations]
+      summary: Update alumni
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlumniWriteRequest'
+      responses:
+        '200':
+          description: Data alumni berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlumniDetailResponse'
+        '400':
+          description: Payload invalid atau siswa tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Industry Relations]
+      summary: Hapus alumni
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Data alumni berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Industry Relations]
+      summary: Update internship
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipWriteRequest'
+      responses:
+        '200':
+          description: Prakerin berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternshipDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Industry Relations]
+      summary: Hapus internship
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Prakerin berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/industry-relations/health:
     get:
       tags: [Industry Relations]
@@ -5118,6 +5675,356 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/ExtracurricularMember'
+      required: [success, data]
+
+    IndustryCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        name:
+          type: string
+          example: Software House
+        description:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, name, created_at, updated_at]
+
+    IndustryCategoryWriteRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Manufaktur
+        description:
+          type: string
+      required: [name]
+
+    IndustryCategoryListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/IndustryCategory'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    IndustryCategoryDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/IndustryCategory'
+      required: [success, data]
+
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        category_id:
+          type: integer
+          format: uint64
+          nullable: true
+        category_name:
+          type: string
+          nullable: true
+        name:
+          type: string
+          example: PT Nusantara Digital
+        city:
+          type: string
+          nullable: true
+        address:
+          type: string
+          nullable: true
+        contact_person:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        status:
+          type: string
+          example: active
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, name, status, created_at, updated_at]
+
+    CompanyWriteRequest:
+      type: object
+      properties:
+        category_id:
+          type: integer
+          format: uint64
+          nullable: true
+        name:
+          type: string
+        city:
+          type: string
+        address:
+          type: string
+        contact_person:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+          example: active
+      required: [name]
+
+    CompanyListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Company'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    CompanyDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Company'
+      required: [success, data]
+
+    Internship:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+        student_full_name:
+          type: string
+        company_id:
+          type: integer
+          format: uint64
+        company_name:
+          type: string
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        mentor_name:
+          type: string
+          nullable: true
+        status:
+          type: string
+          example: planned
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - company_id
+        - company_name
+        - academic_year_id
+        - academic_year_name
+        - status
+        - created_at
+        - updated_at
+
+    InternshipWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        company_id:
+          type: integer
+          format: uint64
+        academic_year_id:
+          type: integer
+          format: uint64
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        mentor_name:
+          type: string
+        status:
+          type: string
+          example: planned
+      required: [student_id, company_id, academic_year_id]
+
+    InternshipListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Internship'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    InternshipDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Internship'
+      required: [success, data]
+
+    Alumni:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_nis:
+          type: string
+        student_full_name:
+          type: string
+        graduation_year:
+          type: integer
+          example: 2026
+        current_activity:
+          type: string
+          nullable: true
+          example: working
+        company_name:
+          type: string
+          nullable: true
+        college_name:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+        - id
+        - student_id
+        - student_nis
+        - student_full_name
+        - graduation_year
+        - created_at
+        - updated_at
+
+    AlumniWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        graduation_year:
+          type: integer
+          example: 2026
+        current_activity:
+          type: string
+          example: working
+        company_name:
+          type: string
+        college_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+      required: [student_id, graduation_year]
+
+    AlumniListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alumni'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    AlumniDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Alumni'
       required: [success, data]
 
     Subject:

@@ -1,15 +1,33 @@
 package industryrelations
 
 import (
+	"database/sql"
 	"net/http"
 
+	"siakad/backend/internal/modules/industryrelations/alumni"
+	"siakad/backend/internal/modules/industryrelations/companies"
+	"siakad/backend/internal/modules/industryrelations/industrycategories"
+	"siakad/backend/internal/modules/industryrelations/internships"
 	"siakad/backend/internal/response"
 )
 
-type Module struct{}
+type Module struct {
+	db                      *sql.DB
+	alumniHandler           *alumni.Handler
+	companyHandler          *companies.Handler
+	industryCategoryHandler *industrycategories.Handler
+	internshipHandler       *internships.Handler
+}
 
-func NewModule() Module {
-	return Module{}
+func NewModule(db *sql.DB) Module {
+	module := Module{db: db}
+	if db != nil {
+		module.alumniHandler = alumni.NewHandler(db)
+		module.industryCategoryHandler = industrycategories.NewHandler(db)
+		module.companyHandler = companies.NewHandler(db)
+		module.internshipHandler = internships.NewHandler(db)
+	}
+	return module
 }
 
 func (Module) Name() string {
@@ -26,6 +44,7 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 			"success": true,
 			"module":  m.Name(),
 			"message": "industry relations module is ready",
+			"db":      m.db != nil,
 		})
 	})
 
@@ -41,5 +60,86 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 				"alumni",
 			},
 		})
+	})
+
+	if m.industryCategoryHandler != nil {
+		m.industryCategoryHandler.RegisterRoutes(mux)
+	}
+	if m.companyHandler != nil {
+		m.companyHandler.RegisterRoutes(mux)
+	}
+	if m.internshipHandler != nil {
+		m.internshipHandler.RegisterRoutes(mux)
+	}
+	if m.alumniHandler != nil {
+		m.alumniHandler.RegisterRoutes(mux)
+	}
+
+	if m.industryCategoryHandler != nil && m.companyHandler != nil && m.internshipHandler != nil && m.alumniHandler != nil {
+		return
+	}
+
+	mux.HandleFunc("GET /api/v1/industry-relations/categories", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/industry-relations/categories", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/industry-relations/categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/industry-relations/categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/industry-relations/categories/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+
+	mux.HandleFunc("GET /api/v1/industry-relations/companies", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/industry-relations/companies", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/industry-relations/companies/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/industry-relations/companies/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/industry-relations/companies/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+
+	mux.HandleFunc("GET /api/v1/industry-relations/internships", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/industry-relations/internships", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/industry-relations/internships/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/industry-relations/internships/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/industry-relations/internships/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+
+	mux.HandleFunc("GET /api/v1/industry-relations/alumni", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/industry-relations/alumni", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/industry-relations/alumni/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/industry-relations/alumni/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/industry-relations/alumni/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }

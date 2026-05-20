@@ -198,6 +198,26 @@ source .env && go run ./cmd/api
 - `PUT /api/v1/academic/subjects/{id}`
 - `DELETE /api/v1/academic/subjects/{id}`
 - `GET /api/v1/industry-relations/health`
+- `GET /api/v1/industry-relations/categories`
+- `POST /api/v1/industry-relations/categories`
+- `GET /api/v1/industry-relations/categories/{id}`
+- `PUT /api/v1/industry-relations/categories/{id}`
+- `DELETE /api/v1/industry-relations/categories/{id}`
+- `GET /api/v1/industry-relations/companies`
+- `POST /api/v1/industry-relations/companies`
+- `GET /api/v1/industry-relations/companies/{id}`
+- `PUT /api/v1/industry-relations/companies/{id}`
+- `DELETE /api/v1/industry-relations/companies/{id}`
+- `GET /api/v1/industry-relations/internships`
+- `POST /api/v1/industry-relations/internships`
+- `GET /api/v1/industry-relations/internships/{id}`
+- `PUT /api/v1/industry-relations/internships/{id}`
+- `DELETE /api/v1/industry-relations/internships/{id}`
+- `GET /api/v1/industry-relations/alumni`
+- `POST /api/v1/industry-relations/alumni`
+- `GET /api/v1/industry-relations/alumni/{id}`
+- `PUT /api/v1/industry-relations/alumni/{id}`
+- `DELETE /api/v1/industry-relations/alumni/{id}`
 - `GET /api/v1/shared/health`
 
 ## Catatan
@@ -860,5 +880,73 @@ curl -X POST http://localhost:8080/api/v1/student-affairs/extracurricular-member
     "student_id": 1,
     "academic_year_id": 1,
     "status": "active"
+  }'
+```
+
+## Contoh Request Industry Categories
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/industry-relations/categories \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Software House",
+    "description": "Mitra industri yang bergerak di pengembangan perangkat lunak."
+  }'
+```
+
+## Contoh Request Companies
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/industry-relations/companies \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category_id": 1,
+    "name": "PT Nusantara Digital",
+    "city": "Padang",
+    "address": "Jl. Veteran No. 10",
+    "contact_person": "Rani Putri",
+    "phone": "0751-123456",
+    "email": "partnership@nusantaradigital.id",
+    "status": "active"
+  }'
+```
+
+## Contoh Request Internships
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/industry-relations/internships \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "company_id": 1,
+    "academic_year_id": 1,
+    "start_date": "2026-08-01",
+    "end_date": "2026-10-31",
+    "mentor_name": "Bapak Andi",
+    "status": "planned"
+  }'
+```
+
+## Contoh Request Alumni
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/industry-relations/alumni \
+  -H "Content-Type: application/json" \
+  -d '{
+    "student_id": 1,
+    "graduation_year": 2026,
+    "current_activity": "working",
+    "company_name": "PT Nusantara Digital",
+    "college_name": "",
+    "phone": "081234567890",
+    "email": "alumni@example.com"
   }'
 ```
