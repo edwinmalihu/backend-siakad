@@ -223,6 +223,8 @@ source .env && go run ./cmd/api
 - `GET /api/v1/shared/announcements/{id}`
 - `PUT /api/v1/shared/announcements/{id}`
 - `DELETE /api/v1/shared/announcements/{id}`
+- `GET /api/v1/shared/student-search`
+- `GET /api/v1/shared/student-search/{id}`
 - `GET /api/v1/shared/health`
 
 ## Catatan
@@ -971,4 +973,18 @@ curl -X POST http://localhost:8080/api/v1/shared/announcements \
     "publish_end": "2026-06-21T12:00",
     "is_published": true
   }'
+```
+
+## Contoh Request Student Search
+
+### Search
+
+```bash
+curl "http://localhost:8080/api/v1/shared/student-search?search=andi&status=active"
+```
+
+### Detail
+
+```bash
+curl "http://localhost:8080/api/v1/shared/student-search/1"
 ```

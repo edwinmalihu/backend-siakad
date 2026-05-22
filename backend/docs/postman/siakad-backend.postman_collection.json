@@ -81,6 +81,10 @@
     {
       "key": "announcementId",
       "value": "1"
+    },
+    {
+      "key": "studentSearchId",
+      "value": "1"
     }
   ],
   "item": [
@@ -1678,6 +1682,27 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/shared/announcements/{{announcementId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shared - Student Search",
+      "item": [
+        {
+          "name": "Search Students",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/student-search?search=andi&status=active"
+          }
+        },
+        {
+          "name": "Get Student Search Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/student-search/{{studentSearchId}}"
           }
         }
       ]
