@@ -50,7 +50,7 @@ func New() (*App, error) {
 		studentaffairs.NewModule(db),
 		academic.NewModule(db),
 		industryrelations.NewModule(db),
-		shared.NewModule(),
+		shared.NewModule(db),
 	}
 
 	server := httpserver.New(httpserver.ServerOptions{

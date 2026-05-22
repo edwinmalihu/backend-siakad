@@ -1,15 +1,24 @@
 package shared
 
 import (
+	"database/sql"
 	"net/http"
 
+	"siakad/backend/internal/modules/shared/announcements"
 	"siakad/backend/internal/response"
 )
 
-type Module struct{}
+type Module struct {
+	db                  *sql.DB
+	announcementHandler *announcements.Handler
+}
 
-func NewModule() Module {
-	return Module{}
+func NewModule(db *sql.DB) Module {
+	module := Module{db: db}
+	if db != nil {
+		module.announcementHandler = announcements.NewHandler(db)
+	}
+	return module
 }
 
 func (Module) Name() string {
@@ -40,5 +49,26 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 				"dashboard",
 			},
 		})
+	})
+
+	if m.announcementHandler != nil {
+		m.announcementHandler.RegisterRoutes(mux)
+		return
+	}
+
+	mux.HandleFunc("GET /api/v1/shared/announcements", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/shared/announcements", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/shared/announcements/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("PUT /api/v1/shared/announcements/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("DELETE /api/v1/shared/announcements/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }

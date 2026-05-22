@@ -218,6 +218,11 @@ source .env && go run ./cmd/api
 - `GET /api/v1/industry-relations/alumni/{id}`
 - `PUT /api/v1/industry-relations/alumni/{id}`
 - `DELETE /api/v1/industry-relations/alumni/{id}`
+- `GET /api/v1/shared/announcements`
+- `POST /api/v1/shared/announcements`
+- `GET /api/v1/shared/announcements/{id}`
+- `PUT /api/v1/shared/announcements/{id}`
+- `DELETE /api/v1/shared/announcements/{id}`
 - `GET /api/v1/shared/health`
 
 ## Catatan
@@ -948,5 +953,22 @@ curl -X POST http://localhost:8080/api/v1/industry-relations/alumni \
     "college_name": "",
     "phone": "081234567890",
     "email": "alumni@example.com"
+  }'
+```
+
+## Contoh Request Announcements
+
+### Create
+
+```bash
+curl -X POST http://localhost:8080/api/v1/shared/announcements \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Jadwal pembagian rapor semester genap",
+    "content": "Pembagian rapor akan dilaksanakan pada Jumat, 21 Juni 2026 pukul 09.00 WIB di aula sekolah.",
+    "target_scope": "students",
+    "publish_start": "2026-06-18T08:00",
+    "publish_end": "2026-06-21T12:00",
+    "is_published": true
   }'
 ```

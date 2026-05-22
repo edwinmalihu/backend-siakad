@@ -3612,6 +3612,139 @@ paths:
               schema:
                 $ref: '#/components/schemas/ModuleHealthResponse'
 
+  /api/v1/shared/announcements:
+    get:
+      tags: [Shared]
+      summary: List announcements
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: target_scope
+          schema:
+            type: string
+        - in: query
+          name: is_published
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Daftar pengumuman
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementListResponse'
+        '400':
+          description: Parameter invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    post:
+      tags: [Shared]
+      summary: Buat announcement baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementWriteRequest'
+      responses:
+        '201':
+          description: Pengumuman berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/shared/announcements/{id}:
+    get:
+      tags: [Shared]
+      summary: Detail announcement
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail pengumuman
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Shared]
+      summary: Update announcement
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnouncementWriteRequest'
+      responses:
+        '200':
+          description: Pengumuman berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnouncementDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Shared]
+      summary: Hapus announcement
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Pengumuman berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/shared/resources:
     get:
       tags: [Shared]
@@ -6025,6 +6158,88 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Alumni'
+      required: [success, data]
+
+    Announcement:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        created_by:
+          type: integer
+          format: uint64
+          nullable: true
+        title:
+          type: string
+        content:
+          type: string
+        target_scope:
+          type: string
+          nullable: true
+        publish_start:
+          type: string
+          format: date-time
+          nullable: true
+        publish_end:
+          type: string
+          format: date-time
+          nullable: true
+        is_published:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, title, content, is_published, created_at, updated_at]
+
+    AnnouncementWriteRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        target_scope:
+          type: string
+        publish_start:
+          type: string
+          format: date-time
+          nullable: true
+        publish_end:
+          type: string
+          format: date-time
+          nullable: true
+        is_published:
+          type: boolean
+      required: [title, content]
+
+    AnnouncementListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Announcement'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    AnnouncementDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/Announcement'
       required: [success, data]
 
     Subject:

@@ -77,6 +77,10 @@
     {
       "key": "alumniId",
       "value": "1"
+    },
+    {
+      "key": "announcementId",
+      "value": "1"
     }
   ],
   "item": [
@@ -1611,6 +1615,69 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/industry-relations/alumni/{{alumniId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shared - Announcements",
+      "item": [
+        {
+          "name": "List Announcements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/announcements?is_published=true"
+          }
+        },
+        {
+          "name": "Create Announcement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Jadwal pembagian rapor semester genap\",\n  \"content\": \"Pembagian rapor akan dilaksanakan pada Jumat, 21 Juni 2026 pukul 09.00 WIB di aula sekolah.\",\n  \"target_scope\": \"students\",\n  \"publish_start\": \"2026-06-18T08:00\",\n  \"publish_end\": \"2026-06-21T12:00\",\n  \"is_published\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/shared/announcements"
+          }
+        },
+        {
+          "name": "Get Announcement By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/announcements/{{announcementId}}"
+          }
+        },
+        {
+          "name": "Update Announcement",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Jadwal pembagian rapor semester genap\",\n  \"content\": \"Pembagian rapor dipusatkan di aula sekolah dan dimulai pukul 09.00 WIB.\",\n  \"target_scope\": \"students\",\n  \"publish_start\": \"2026-06-18T08:00\",\n  \"publish_end\": \"2026-06-21T12:00\",\n  \"is_published\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/shared/announcements/{{announcementId}}"
+          }
+        },
+        {
+          "name": "Delete Announcement",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/shared/announcements/{{announcementId}}"
           }
         }
       ]
