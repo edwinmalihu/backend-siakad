@@ -93,6 +93,10 @@
     {
       "key": "studentAssessmentId",
       "value": "1"
+    },
+    {
+      "key": "studentGradeId",
+      "value": "1"
     }
   ],
   "item": [
@@ -745,6 +749,69 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/academic/student-assessments/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Student Grades",
+      "item": [
+        {
+          "name": "List Student Grades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-grades"
+          }
+        },
+        {
+          "name": "Create Student Grade",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"final_score\": 85.50,\n  \"grade_letter\": \"B+\",\n  \"predicate\": \"Baik\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/student-grades"
+          }
+        },
+        {
+          "name": "Get Student Grade By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-grades/1"
+          }
+        },
+        {
+          "name": "Update Student Grade",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"final_score\": 90.00,\n  \"grade_letter\": \"A\",\n  \"predicate\": \"Sangat Baik\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/student-grades/1"
+          }
+        },
+        {
+          "name": "Delete Student Grade",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-grades/1"
           }
         }
       ]

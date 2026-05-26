@@ -3328,6 +3328,162 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/academic/student-grades:
+    get:
+      tags: [Academic]
+      summary: List student grades
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: subject_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: Daftar nilai akhir siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGradeListResponse'
+    post:
+      tags: [Academic]
+      summary: Buat nilai akhir siswa baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentGradeWriteRequest'
+      responses:
+        '201':
+          description: Nilai berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGradeDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Scope sudah ada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/student-grades/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail nilai akhir siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail nilai
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGradeDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update nilai akhir siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentGradeWriteRequest'
+      responses:
+        '200':
+          description: Nilai berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentGradeDetailResponse'
+        '400':
+          description: Payload invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Scope sudah ada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete nilai akhir siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Nilai berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/industry-relations/categories:
     get:
       tags: [Industry Relations]
@@ -7163,4 +7319,115 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/StudentAssessment'
+      required: [success, data]
+
+    StudentGrade:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_name:
+          type: string
+        student_nis:
+          type: string
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+        subject_id:
+          type: integer
+          format: uint64
+        subject_code:
+          type: string
+        subject_name:
+          type: string
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+        semester_name:
+          type: string
+        final_score:
+          type: number
+          format: double
+        grade_letter:
+          type: string
+          nullable: true
+        predicate:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required: [id, student_id, student_name, student_nis, class_id, class_name, subject_id, subject_code, subject_name, academic_year_id, academic_year_name, semester_id, semester_code, semester_name, final_score, created_at, updated_at]
+
+    StudentGradeWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+        class_id:
+          type: integer
+          format: uint64
+        subject_id:
+          type: integer
+          format: uint64
+        academic_year_id:
+          type: integer
+          format: uint64
+        semester_id:
+          type: integer
+          format: uint64
+        final_score:
+          type: number
+          format: double
+        grade_letter:
+          type: string
+        predicate:
+          type: string
+      required: [student_id, class_id, subject_id, academic_year_id, semester_id, final_score]
+
+    StudentGradeListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentGrade'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentGradeDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StudentGrade'
       required: [success, data]

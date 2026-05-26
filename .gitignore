@@ -7,3 +7,11 @@ backend/.vscode/
 Capture/
 backups/
 frontend/
+siakad-backend
+siakad-frontend.log
+siakad.log
+start-siakad.sh
+siakad-backend
+siakad-frontend.log
+siakad.log
+start-siakad.sh
