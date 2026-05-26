@@ -85,6 +85,14 @@
     {
       "key": "studentSearchId",
       "value": "1"
+    },
+    {
+      "key": "assessmentComponentId",
+      "value": "1"
+    },
+    {
+      "key": "studentAssessmentId",
+      "value": "1"
     }
   ],
   "item": [
@@ -611,6 +619,132 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/academic/subjects/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Assessment Components",
+      "item": [
+        {
+          "name": "List Assessment Components",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/assessment-components"
+          }
+        },
+        {
+          "name": "Create Assessment Component",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"name\": \"Tugas\",\n  \"weight\": 30\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/assessment-components"
+          }
+        },
+        {
+          "name": "Get Assessment Component By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/assessment-components/1"
+          }
+        },
+        {
+          "name": "Update Assessment Component",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"subject_id\": 1,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1,\n  \"name\": \"Tugas\",\n  \"weight\": 40\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/assessment-components/1"
+          }
+        },
+        {
+          "name": "Delete Assessment Component",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/assessment-components/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Academic - Student Assessments",
+      "item": [
+        {
+          "name": "List Student Assessments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-assessments"
+          }
+        },
+        {
+          "name": "Create Student Assessment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"assessment_component_id\": 1,\n  \"teacher_id\": 1,\n  \"score\": 85,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/student-assessments"
+          }
+        },
+        {
+          "name": "Get Student Assessment By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-assessments/1"
+          }
+        },
+        {
+          "name": "Update Student Assessment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student_id\": 1,\n  \"class_id\": 1,\n  \"subject_id\": 1,\n  \"assessment_component_id\": 1,\n  \"teacher_id\": 1,\n  \"score\": 90,\n  \"academic_year_id\": 1,\n  \"semester_id\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/academic/student-assessments/1"
+          }
+        },
+        {
+          "name": "Delete Student Assessment",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/academic/student-assessments/1"
           }
         }
       ]

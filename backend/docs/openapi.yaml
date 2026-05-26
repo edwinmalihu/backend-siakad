@@ -3019,6 +3019,315 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /api/v1/academic/assessment-components:
+    get:
+      tags: [Academic]
+      summary: List assessment components
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan nama komponen, kode/nama mapel, tahun ajaran, atau semester
+        - in: query
+          name: subject_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: Daftar komponen penilaian
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentComponentListResponse'
+    post:
+      tags: [Academic]
+      summary: Buat komponen penilaian baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentComponentWriteRequest'
+      responses:
+        '201':
+          description: Komponen penilaian berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentComponentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama komponen sudah ada untuk scope yang sama
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/assessment-components/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail komponen penilaian
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail komponen penilaian
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentComponentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update komponen penilaian
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentComponentWriteRequest'
+      responses:
+        '200':
+          description: Komponen penilaian berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentComponentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Nama komponen sudah ada untuk scope yang sama
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete komponen penilaian
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Komponen penilaian berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/student-assessments:
+    get:
+      tags: [Academic]
+      summary: List student assessments
+      parameters:
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Filter berdasarkan nama siswa, NIS, kelas, kode/nama mapel, komponen, guru, tahun ajaran, atau semester
+        - in: query
+          name: student_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: class_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: subject_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: assessment_component_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: academic_year_id
+          schema:
+            type: integer
+            format: uint64
+        - in: query
+          name: semester_id
+          schema:
+            type: integer
+            format: uint64
+      responses:
+        '200':
+          description: Daftar penilaian siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAssessmentListResponse'
+    post:
+      tags: [Academic]
+      summary: Buat penilaian siswa baru
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentAssessmentWriteRequest'
+      responses:
+        '201':
+          description: Penilaian siswa berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAssessmentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Penilaian sudah ada untuk scope yang sama
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/v1/academic/student-assessments/{id}:
+    get:
+      tags: [Academic]
+      summary: Detail penilaian siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Detail penilaian siswa
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAssessmentDetailResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    put:
+      tags: [Academic]
+      summary: Update penilaian siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentAssessmentWriteRequest'
+      responses:
+        '200':
+          description: Penilaian siswa berhasil diupdate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentAssessmentDetailResponse'
+        '400':
+          description: Payload invalid atau relasi tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Penilaian sudah ada untuk scope yang sama
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Academic]
+      summary: Soft delete penilaian siswa
+      parameters:
+        - $ref: '#/components/parameters/IDParam'
+      responses:
+        '200':
+          description: Penilaian siswa berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteResponse'
+        '400':
+          description: ID invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Data tidak ditemukan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /api/v1/industry-relations/categories:
     get:
       tags: [Industry Relations]
@@ -6580,4 +6889,278 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/Subject'
+      required: [success, data]
+
+    AssessmentComponent:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        subject_id:
+          type: integer
+          format: uint64
+        subject_code:
+          type: string
+          example: MTK
+        subject_name:
+          type: string
+          example: Matematika
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2026/2027
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+          example: G-01
+        semester_name:
+          type: string
+          example: Ganjil
+        name:
+          type: string
+          example: Tugas
+        weight:
+          type: number
+          format: double
+          example: 30
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - subject_id
+        - subject_code
+        - subject_name
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - name
+        - weight
+        - created_at
+        - updated_at
+
+    AssessmentComponentWriteRequest:
+      type: object
+      properties:
+        subject_id:
+          type: integer
+          format: uint64
+          example: 1
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        semester_id:
+          type: integer
+          format: uint64
+          example: 1
+        name:
+          type: string
+          example: Tugas
+        weight:
+          type: number
+          format: double
+          example: 30
+      required: [subject_id, academic_year_id, semester_id, name, weight]
+
+    AssessmentComponentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssessmentComponent'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    AssessmentComponentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/AssessmentComponent'
+      required: [success, data]
+
+    StudentAssessment:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint64
+        student_id:
+          type: integer
+          format: uint64
+        student_name:
+          type: string
+          example: Edwin Malihu
+        student_nis:
+          type: string
+          example: 71150052
+        class_id:
+          type: integer
+          format: uint64
+        class_name:
+          type: string
+          example: Kelas 10 - A
+        subject_id:
+          type: integer
+          format: uint64
+        subject_code:
+          type: string
+          example: MTK
+        subject_name:
+          type: string
+          example: Matematika
+        assessment_component_id:
+          type: integer
+          format: uint64
+        component_name:
+          type: string
+          example: Tugas
+        component_weight:
+          type: number
+          format: double
+          example: 30
+        teacher_id:
+          type: integer
+          format: uint64
+        teacher_name:
+          type: string
+          example: Ferdinand Malihu
+        score:
+          type: number
+          format: double
+          example: 85
+        academic_year_id:
+          type: integer
+          format: uint64
+        academic_year_name:
+          type: string
+          example: 2026/2027
+        semester_id:
+          type: integer
+          format: uint64
+        semester_code:
+          type: string
+          example: G-01
+        semester_name:
+          type: string
+          example: Ganjil
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+      required:
+        - id
+        - student_id
+        - student_name
+        - student_nis
+        - class_id
+        - class_name
+        - subject_id
+        - subject_code
+        - subject_name
+        - assessment_component_id
+        - component_name
+        - component_weight
+        - teacher_id
+        - teacher_name
+        - score
+        - academic_year_id
+        - academic_year_name
+        - semester_id
+        - semester_code
+        - semester_name
+        - created_at
+        - updated_at
+
+    StudentAssessmentWriteRequest:
+      type: object
+      properties:
+        student_id:
+          type: integer
+          format: uint64
+          example: 1
+        class_id:
+          type: integer
+          format: uint64
+          example: 1
+        subject_id:
+          type: integer
+          format: uint64
+          example: 1
+        assessment_component_id:
+          type: integer
+          format: uint64
+          example: 1
+        teacher_id:
+          type: integer
+          format: uint64
+          example: 1
+        score:
+          type: number
+          format: double
+          example: 85
+        academic_year_id:
+          type: integer
+          format: uint64
+          example: 1
+        semester_id:
+          type: integer
+          format: uint64
+          example: 1
+      required: [student_id, class_id, subject_id, assessment_component_id, teacher_id, score, academic_year_id, semester_id]
+
+    StudentAssessmentListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentAssessment'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+          required: [total]
+      required: [success, data, meta]
+
+    StudentAssessmentDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StudentAssessment'
       required: [success, data]

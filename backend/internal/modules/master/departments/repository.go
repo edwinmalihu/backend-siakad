@@ -49,18 +49,28 @@ func (r *Repository) List(ctx context.Context, search string) ([]Department, err
 	items := make([]Department, 0)
 	for rows.Next() {
 		var item Department
+		var programName, fieldName, description sql.NullString
 		if err := rows.Scan(
 			&item.ID,
 			&item.Code,
 			&item.Name,
-			&item.ProgramName,
-			&item.FieldName,
-			&item.Description,
+			&programName,
+			&fieldName,
+			&description,
 			&item.CreatedAt,
 			&item.UpdatedAt,
 			&item.DeletedAt,
 		); err != nil {
 			return nil, fmt.Errorf("scan department: %w", err)
+		}
+		if programName.Valid {
+			item.ProgramName = programName.String
+		}
+		if fieldName.Valid {
+			item.FieldName = fieldName.String
+		}
+		if description.Valid {
+			item.Description = description.String
 		}
 		items = append(items, item)
 	}
@@ -81,13 +91,14 @@ func (r *Repository) GetByID(ctx context.Context, id uint64) (*Department, error
 	`
 
 	var item Department
+	var programName, fieldName, description sql.NullString
 	err := r.db.QueryRowContext(ctx, query, id).Scan(
 		&item.ID,
 		&item.Code,
 		&item.Name,
-		&item.ProgramName,
-		&item.FieldName,
-		&item.Description,
+		&programName,
+		&fieldName,
+		&description,
 		&item.CreatedAt,
 		&item.UpdatedAt,
 		&item.DeletedAt,
@@ -97,6 +108,15 @@ func (r *Repository) GetByID(ctx context.Context, id uint64) (*Department, error
 	}
 	if err != nil {
 		return nil, fmt.Errorf("get department by id: %w", err)
+	}
+	if programName.Valid {
+		item.ProgramName = programName.String
+	}
+	if fieldName.Valid {
+		item.FieldName = fieldName.String
+	}
+	if description.Valid {
+		item.Description = description.String
 	}
 
 	return &item, nil
