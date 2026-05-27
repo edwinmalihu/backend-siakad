@@ -75,6 +75,10 @@
       "value": "1"
     },
     {
+      "key": "internshipLogId",
+      "value": "1"
+    },
+    {
       "key": "alumniId",
       "value": "1"
     },
@@ -1757,6 +1761,69 @@
             "method": "DELETE",
             "header": [],
             "url": "{{baseUrl}}/api/v1/industry-relations/internships/{{internshipId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Industry Relations - Internship Logs",
+      "item": [
+        {
+          "name": "List Internship Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internship-logs?internship_id={{internshipId}}"
+          }
+        },
+        {
+          "name": "Create Internship Log",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"internship_id\": {{internshipId}},\n  \"log_date\": \"2026-08-05\",\n  \"activity\": \"Observasi proses development di bagian backend\",\n  \"notes\": \"Mempelajari struktur project Go\",\n  \"supervisor_name\": \"Bapak Andi\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/internship-logs"
+          }
+        },
+        {
+          "name": "Get Internship Log By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internship-logs/{{internshipLogId}}"
+          }
+        },
+        {
+          "name": "Update Internship Log",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"internship_id\": {{internshipId}},\n  \"log_date\": \"2026-08-05\",\n  \"activity\": \"Implementasi fitur CRUD pada backend\",\n  \"notes\": \"Berhasil membuat endpoint baru\",\n  \"supervisor_name\": \"Bapak Andi\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/industry-relations/internship-logs/{{internshipLogId}}"
+          }
+        },
+        {
+          "name": "Delete Internship Log",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/v1/industry-relations/internship-logs/{{internshipLogId}}"
           }
         }
       ]
