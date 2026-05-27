@@ -6,15 +6,17 @@ import (
 
 	"siakad/backend/internal/modules/shared/announcements"
 	"siakad/backend/internal/modules/shared/auditlogs"
+	"siakad/backend/internal/modules/shared/importexport"
 	"siakad/backend/internal/modules/shared/studentsearch"
 	"siakad/backend/internal/response"
 )
 
 type Module struct {
-	db                  *sql.DB
-	announcementHandler *announcements.Handler
-	auditLogHandler     *auditlogs.Handler
-	searchHandler       *studentsearch.Handler
+	db                      *sql.DB
+	announcementHandler     *announcements.Handler
+	auditLogHandler         *auditlogs.Handler
+	searchHandler           *studentsearch.Handler
+	importExportHandler     *importexport.Handler
 }
 
 func NewModule(db *sql.DB) Module {
@@ -23,6 +25,7 @@ func NewModule(db *sql.DB) Module {
 		module.announcementHandler = announcements.NewHandler(db)
 		module.auditLogHandler = auditlogs.NewHandler(db)
 		module.searchHandler = studentsearch.NewHandler(db)
+		module.importExportHandler = importexport.NewHandler(db)
 	}
 	return module
 }
@@ -66,8 +69,11 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 	if m.searchHandler != nil {
 		m.searchHandler.RegisterRoutes(mux)
 	}
+	if m.importExportHandler != nil {
+		m.importExportHandler.RegisterRoutes(mux)
+	}
 
-	if m.announcementHandler != nil && m.auditLogHandler != nil && m.searchHandler != nil {
+	if m.announcementHandler != nil && m.auditLogHandler != nil && m.searchHandler != nil && m.importExportHandler != nil {
 		return
 	}
 
@@ -96,6 +102,15 @@ func (m Module) RegisterRoutes(mux *http.ServeMux) {
 		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 	mux.HandleFunc("GET /api/v1/shared/audit-logs/{id}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/shared/import/{module}/template", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("POST /api/v1/shared/import/{module}", func(w http.ResponseWriter, r *http.Request) {
+		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
+	})
+	mux.HandleFunc("GET /api/v1/shared/export/{module}", func(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusServiceUnavailable, "database connection is not configured")
 	})
 }
