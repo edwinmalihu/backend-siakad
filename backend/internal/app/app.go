@@ -17,6 +17,7 @@ import (
 	"siakad/backend/internal/modules/master"
 	"siakad/backend/internal/modules/shared"
 	"siakad/backend/internal/modules/studentaffairs"
+	"siakad/backend/internal/modules/usermanagement"
 )
 
 type App struct {
@@ -51,6 +52,7 @@ func New() (*App, error) {
 		academic.NewModule(db),
 		industryrelations.NewModule(db),
 		shared.NewModule(db),
+		usermanagement.NewModule(db),
 	}
 
 	server := httpserver.New(httpserver.ServerOptions{
