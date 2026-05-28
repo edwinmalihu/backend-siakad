@@ -69,7 +69,8 @@ func (r *Repository) List(ctx context.Context, search, module, action string, us
 			al.entity_id,
 			COALESCE(al.payload_json, '') AS payload_json,
 			COALESCE(al.ip_address, '') AS ip_address,
-			al.created_at
+			al.created_at,
+			al.logout_time
 		FROM audit_logs al
 		LEFT JOIN users u ON u.id = al.user_id
 		WHERE 1=1
@@ -121,12 +122,17 @@ func (r *Repository) List(ctx context.Context, search, module, action string, us
 			&item.PayloadJSON,
 			&item.IPAddress,
 			&item.CreatedAt,
+			&item.LogoutTime,
 		); err != nil {
 			return nil, fmt.Errorf("scan audit log: %w", err)
 		}
 		if userID.Valid {
 			uid := uint64(userID.Int64)
 			item.UserID = &uid
+		}
+		// For login records, login_time = created_at
+		if item.Action == "login" {
+			item.LoginTime = &item.CreatedAt
 		}
 		items = append(items, item)
 	}
@@ -150,7 +156,8 @@ func (r *Repository) GetByID(ctx context.Context, id uint64) (*AuditLog, error) 
 			al.entity_id,
 			COALESCE(al.payload_json, '') AS payload_json,
 			COALESCE(al.ip_address, '') AS ip_address,
-			al.created_at
+			al.created_at,
+			al.logout_time
 		FROM audit_logs al
 		LEFT JOIN users u ON u.id = al.user_id
 		WHERE al.id = ?
@@ -170,6 +177,7 @@ func (r *Repository) GetByID(ctx context.Context, id uint64) (*AuditLog, error) 
 		&item.PayloadJSON,
 		&item.IPAddress,
 		&item.CreatedAt,
+		&item.LogoutTime,
 	)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, ErrNotFound
@@ -182,5 +190,48 @@ func (r *Repository) GetByID(ctx context.Context, id uint64) (*AuditLog, error) 
 		item.UserID = &uid
 	}
 
+	// For login records, login_time = created_at
+	item.LoginTime = &item.CreatedAt
+
 	return &item, nil
+}
+
+// FindLatestLogin finds the most recent login audit log for a user that has no logout_time yet.
+func (r *Repository) FindLatestLogin(ctx context.Context, userID uint64) (*AuditLog, error) {
+	const query = `
+		SELECT id, created_at
+		FROM audit_logs
+		WHERE user_id = ?
+		  AND action = 'login'
+		  AND logout_time IS NULL
+		ORDER BY created_at DESC
+		LIMIT 1
+	`
+
+	var item AuditLog
+	err := r.db.QueryRowContext(ctx, query, userID).Scan(&item.ID, &item.CreatedAt)
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, fmt.Errorf("find latest login: %w", err)
+	}
+
+	return &item, nil
+}
+
+// UpdateLogoutTime sets the logout_time on an audit log record.
+func (r *Repository) UpdateLogoutTime(ctx context.Context, id uint64) error {
+	const query = `
+		UPDATE audit_logs
+		SET logout_time = NOW()
+		WHERE id = ? AND logout_time IS NULL
+	`
+
+	_, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("update logout time: %w", err)
+	}
+
+	return nil
 }

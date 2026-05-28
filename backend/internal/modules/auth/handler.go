@@ -84,7 +84,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "login", "user", user.ID, nil, req)
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "login", "user", user.ID, &user.ID, req)
 
 	user.PasswordHash = ""
 
@@ -114,7 +114,11 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "logout", "user", claims.Sub, &claims.Sub, map[string]string{"username": claims.Username})
+	// Find the latest login record for this user and update logout_time
+	latestLogin, err := h.auditLog.FindLatestLogin(r.Context(), claims.Sub)
+	if err == nil && latestLogin != nil {
+		_ = h.auditLog.UpdateLogoutTime(r.Context(), latestLogin.ID)
+	}
 
 	response.JSON(w, http.StatusOK, map[string]any{
 		"success": true,

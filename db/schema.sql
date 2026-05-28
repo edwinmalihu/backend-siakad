@@ -377,11 +377,13 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
   `entity_id` BIGINT UNSIGNED DEFAULT NULL,
   `payload_json` JSON DEFAULT NULL,
   `ip_address` VARCHAR(45) DEFAULT NULL,
+  `logout_time` DATETIME DEFAULT NULL,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `idx_audit_logs_user_id` (`user_id`),
   KEY `idx_audit_logs_module_action` (`module`, `action`),
   KEY `idx_audit_logs_entity` (`entity_type`, `entity_id`),
+  KEY `idx_audit_logs_logout_time` (`logout_time`),
   CONSTRAINT `fk_audit_logs_user_id`
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
     ON UPDATE CASCADE ON DELETE SET NULL
