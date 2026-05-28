@@ -1,6 +1,7 @@
 package students
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -10,16 +11,20 @@ import (
 	"strings"
 	"time"
 
+	"siakad/backend/internal/modules/auth"
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
 type Handler struct {
-	repo *Repository
+	repo     *Repository
+	auditLog *auditlogs.Repository
 }
 
-func NewHandler(db *sql.DB) *Handler {
+func NewHandler(db *sql.DB, auditLog *auditlogs.Repository) *Handler {
 	return &Handler{
-		repo: NewRepository(db),
+		repo:     NewRepository(db),
+		auditLog: auditLog,
 	}
 }
 
@@ -102,6 +107,8 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.logAudit(r.Context(), r, "create", "student", created.ID, req)
+
 	response.JSON(w, http.StatusCreated, map[string]any{
 		"success": true,
 		"data":    created,
@@ -132,6 +139,8 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.logAudit(r.Context(), r, "update", "student", id, req)
+
 	response.JSON(w, http.StatusOK, map[string]any{
 		"success": true,
 		"data":    updated,
@@ -153,6 +162,8 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	h.logAudit(r.Context(), r, "delete", "student", id, nil)
 
 	response.JSON(w, http.StatusOK, map[string]any{
 		"success": true,
@@ -243,4 +254,44 @@ func buildStudent(nis, nisn, fullName, gender, birthPlace, birthDate, address, p
 		EntryYear:  entryYear,
 		Status:     status,
 	}, nil
+}
+
+func (h *Handler) logAudit(ctx context.Context, r *http.Request, action, entityType string, entityID uint64, payload interface{}) {
+	if h.auditLog == nil {
+		return
+	}
+
+	user := auth.GetUserFromContext(ctx)
+	var userID *uint64
+	if user != nil {
+		uid := user.UserID
+		userID = &uid
+	}
+
+	payloadJSON := ""
+	if payload != nil {
+		if bytes, err := json.Marshal(payload); err == nil {
+			payloadJSON = string(bytes)
+		}
+	}
+
+	ipAddress := r.RemoteAddr
+	if forwarded := r.Header.Get("X-Forwarded-For"); forwarded != "" {
+		parts := strings.Split(forwarded, ",")
+		if len(parts) > 0 {
+			ipAddress = strings.TrimSpace(parts[0])
+		}
+	}
+
+	auditLog := &auditlogs.AuditLog{
+		UserID:      userID,
+		Module:      "student_affairs",
+		Action:      action,
+		EntityType:  entityType,
+		EntityID:    &entityID,
+		PayloadJSON: payloadJSON,
+		IPAddress:   ipAddress,
+	}
+
+	_ = h.auditLog.Create(ctx, auditLog)
 }

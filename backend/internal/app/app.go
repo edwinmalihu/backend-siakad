@@ -55,6 +55,8 @@ func New() (*App, error) {
 		usermanagement.NewModule(db),
 	}
 
+	authService := auth.NewService(cfg.Auth.TokenSecret, cfg.Auth.TokenTTL)
+
 	server := httpserver.New(httpserver.ServerOptions{
 		AppName:      cfg.App.Name,
 		Environment:  cfg.App.Env,
@@ -65,6 +67,7 @@ func New() (*App, error) {
 		DB:           db,
 		Logger:       logger,
 		Modules:      modules,
+		AuthService:  authService,
 	})
 
 	return &App{

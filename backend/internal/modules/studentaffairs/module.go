@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/modules/studentaffairs/attendances"
 	"siakad/backend/internal/modules/studentaffairs/disciplinecategories"
 	"siakad/backend/internal/modules/studentaffairs/disciplinerecords"
@@ -35,13 +36,14 @@ func NewModule(db *sql.DB) Module {
 	}
 
 	if db != nil {
+		auditLogRepo := auditlogs.NewRepository(db)
 		module.attendanceHandler = attendances.NewHandler(db)
 		module.disciplineCategoryHandler = disciplinecategories.NewHandler(db)
 		module.disciplineRecordHandler = disciplinerecords.NewHandler(db)
 		module.extracurricularHandler = extracurriculars.NewHandler(db)
 		module.extracurricularMemberHandler = extracurricularmembers.NewHandler(db)
 		module.studentGraduationHandler = studentgraduations.NewHandler(db)
-		module.studentHandler = students.NewHandler(db)
+		module.studentHandler = students.NewHandler(db, auditLogRepo)
 		module.studentEnrollmentHandler = studentenrollments.NewHandler(db)
 		module.studentMutationHandler = studentmutations.NewHandler(db)
 	}

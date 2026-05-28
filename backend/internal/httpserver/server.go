@@ -9,6 +9,7 @@ import (
 
 	apidocs "siakad/backend/docs"
 	"siakad/backend/internal/database"
+	"siakad/backend/internal/modules/auth"
 	"siakad/backend/internal/response"
 )
 
@@ -28,6 +29,7 @@ type ServerOptions struct {
 	DB           *sql.DB
 	Logger       *slog.Logger
 	Modules      []Module
+	AuthService  *auth.Service
 }
 
 func New(opts ServerOptions) *http.Server {
@@ -38,9 +40,15 @@ func New(opts ServerOptions) *http.Server {
 		module.RegisterRoutes(mux)
 	}
 
+	var handler http.Handler = mux
+	if opts.AuthService != nil {
+		handler = auth.AuthMiddleware(opts.AuthService, mux)
+	}
+	handler = loggingMiddleware(opts.Logger, handler)
+
 	return &http.Server{
 		Addr:         opts.Address,
-		Handler:      loggingMiddleware(opts.Logger, mux),
+		Handler:      handler,
 		ReadTimeout:  opts.ReadTimeout,
 		WriteTimeout: opts.WriteTimeout,
 		IdleTimeout:  opts.IdleTimeout,

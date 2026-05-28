@@ -18,6 +18,45 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
+func (r *Repository) Create(ctx context.Context, log *AuditLog) error {
+	const query = `
+		INSERT INTO audit_logs (user_id, module, action, entity_type, entity_id, payload_json, ip_address)
+		VALUES (?, ?, ?, ?, ?, ?, ?)
+	`
+
+	var entityType, payloadJSON, ipAddress interface{}
+	if log.EntityType != "" {
+		entityType = log.EntityType
+	}
+	if log.PayloadJSON != "" {
+		payloadJSON = log.PayloadJSON
+	}
+	if log.IPAddress != "" {
+		ipAddress = log.IPAddress
+	}
+
+	result, err := r.db.ExecContext(ctx, query,
+		log.UserID,
+		log.Module,
+		log.Action,
+		entityType,
+		log.EntityID,
+		payloadJSON,
+		ipAddress,
+	)
+	if err != nil {
+		return fmt.Errorf("insert audit log: %w", err)
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return fmt.Errorf("get last insert id: %w", err)
+	}
+	log.ID = uint64(id)
+
+	return nil
+}
+
 func (r *Repository) List(ctx context.Context, search, module, action string, userID uint64) ([]AuditLog, error) {
 	query := `
 		SELECT

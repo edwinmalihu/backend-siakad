@@ -22,10 +22,11 @@ type Module struct {
 func NewModule(db *sql.DB) Module {
 	module := Module{db: db}
 	if db != nil {
+		auditLogRepo := auditlogs.NewRepository(db)
 		module.announcementHandler = announcements.NewHandler(db)
 		module.auditLogHandler = auditlogs.NewHandler(db)
 		module.searchHandler = studentsearch.NewHandler(db)
-		module.importExportHandler = importexport.NewHandler(db)
+		module.importExportHandler = importexport.NewHandler(db, auditLogRepo)
 	}
 	return module
 }

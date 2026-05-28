@@ -11,6 +11,7 @@ import (
 	"siakad/backend/internal/modules/academic/studentgrades"
 	"siakad/backend/internal/modules/academic/subjects"
 	"siakad/backend/internal/modules/academic/teachers"
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
@@ -31,12 +32,13 @@ func NewModule(db *sql.DB) Module {
 	}
 
 	if db != nil {
+		auditLogRepo := auditlogs.NewRepository(db)
 		module.assessmentComponentHandler = assessmentcomponents.NewHandler(db)
 		module.homeroomAssignmentHandler = homeroomassignments.NewHandler(db)
 		module.scheduleHandler = schedules.NewHandler(db)
 		module.studentAssessmentHandler = studentassessments.NewHandler(db)
 		module.studentGradeHandler = studentgrades.NewHandler(db)
-		module.subjectHandler = subjects.NewHandler(db)
+		module.subjectHandler = subjects.NewHandler(db, auditLogRepo)
 		module.teacherHandler = teachers.NewHandler(db)
 	}
 
