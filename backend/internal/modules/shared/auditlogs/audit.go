@@ -3,6 +3,7 @@ package auditlogs
 import (
 	"context"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -11,6 +12,7 @@ import (
 // The caller should pass the userID extracted from auth context to avoid import cycles.
 func LogAudit(ctx context.Context, r *http.Request, repo *Repository, module, action, entityType string, entityID *uint64, userID *uint64, payload interface{}) {
 	if repo == nil {
+		log.Println("[audit] WARN: repo is nil, skipping audit log")
 		return
 	}
 
@@ -41,7 +43,9 @@ func LogAudit(ctx context.Context, r *http.Request, repo *Repository, module, ac
 		IPAddress:   ipAddress,
 	}
 
-	_ = repo.Create(ctx, auditLog)
+	if err := repo.Create(ctx, auditLog); err != nil {
+		log.Printf("[audit] ERROR: failed to create audit log: %v | module=%s action=%s entity=%s\n", err, module, action, entityType)
+	}
 }
 
 // LogAuditWithID is a convenience wrapper that takes a uint64 entityID.

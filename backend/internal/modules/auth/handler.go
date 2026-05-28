@@ -26,6 +26,7 @@ func NewHandler(repo *Repository, service *Service, auditLog *auditlogs.Reposito
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/v1/auth/login", h.Login)
+	mux.HandleFunc("POST /api/v1/auth/logout", h.Logout)
 	mux.HandleFunc("GET /api/v1/auth/me", h.Me)
 }
 
@@ -95,6 +96,29 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 			ExpiresAt:   expiresAt,
 			User:        *user,
 		},
+	})
+}
+
+func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
+	token, ok := extractBearerToken(r.Header.Get("Authorization"))
+	if !ok {
+		response.Error(w, http.StatusUnauthorized, "authorization token is required")
+		return
+	}
+
+	claims, err := h.service.ParseToken(token)
+	if err != nil {
+		// Token invalid/expired — still log the attempt
+		auditlogs.LogAudit(r.Context(), r, h.auditLog, "auth", "logout_failed", "user", nil, nil, map[string]string{"reason": "invalid token"})
+		response.Error(w, http.StatusUnauthorized, "invalid or expired token")
+		return
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "logout", "user", claims.Sub, &claims.Sub, map[string]string{"username": claims.Username})
+
+	response.JSON(w, http.StatusOK, map[string]any{
+		"success": true,
+		"message": "logged out successfully",
 	})
 }
 
