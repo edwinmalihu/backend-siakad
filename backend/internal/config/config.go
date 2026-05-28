@@ -1,9 +1,11 @@
 package config
 
 import (
+	"bufio"
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -51,6 +53,8 @@ type MySQLConfig struct {
 }
 
 func Load() (Config, error) {
+	loadDotEnv()
+
 	cfg := Config{
 		App: AppConfig{
 			Name:            getEnv("APP_NAME", "SIAKAD Backend"),
@@ -167,4 +171,38 @@ func getDurationEnv(key string, fallback time.Duration) time.Duration {
 	}
 
 	return parsed
+}
+
+func loadDotEnv() {
+	file, err := os.Open(".env")
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		key := strings.TrimSpace(parts[0])
+		value := strings.TrimSpace(parts[1])
+
+		// Remove surrounding quotes
+		if len(value) >= 2 && value[0] == '"' && value[len(value)-1] == '"' {
+			value = value[1 : len(value)-1]
+		}
+
+		// Only set if not already set by environment
+		if os.Getenv(key) == "" {
+			os.Setenv(key, value)
+		}
+	}
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -15,6 +16,15 @@ import (
 func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
+
+	logFile, err := os.OpenFile("siakad.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		slog.Error("failed to open log file", "error", err)
+		os.Exit(1)
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
 
 	application, err := app.New()
 	if err != nil {
