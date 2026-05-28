@@ -33,13 +33,13 @@ func NewModule(db *sql.DB) Module {
 
 	if db != nil {
 		auditLogRepo := auditlogs.NewRepository(db)
-		module.assessmentComponentHandler = assessmentcomponents.NewHandler(db)
-		module.homeroomAssignmentHandler = homeroomassignments.NewHandler(db)
-		module.scheduleHandler = schedules.NewHandler(db)
-		module.studentAssessmentHandler = studentassessments.NewHandler(db)
-		module.studentGradeHandler = studentgrades.NewHandler(db)
+		module.assessmentComponentHandler = assessmentcomponents.NewHandler(db, auditLogRepo)
+		module.homeroomAssignmentHandler = homeroomassignments.NewHandler(db, auditLogRepo)
+		module.scheduleHandler = schedules.NewHandler(db, auditLogRepo)
+		module.studentAssessmentHandler = studentassessments.NewHandler(db, auditLogRepo)
+		module.studentGradeHandler = studentgrades.NewHandler(db, auditLogRepo)
 		module.subjectHandler = subjects.NewHandler(db, auditLogRepo)
-		module.teacherHandler = teachers.NewHandler(db)
+		module.teacherHandler = teachers.NewHandler(db, auditLogRepo)
 	}
 
 	return module

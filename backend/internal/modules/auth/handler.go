@@ -6,18 +6,21 @@ import (
 	"net/http"
 	"strings"
 
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
 type Handler struct {
-	repo    *Repository
-	service *Service
+	repo     *Repository
+	service  *Service
+	auditLog *auditlogs.Repository
 }
 
-func NewHandler(repo *Repository, service *Service) *Handler {
+func NewHandler(repo *Repository, service *Service, auditLog *auditlogs.Repository) *Handler {
 	return &Handler{
-		repo:    repo,
-		service: service,
+		repo:     repo,
+		service:  service,
+		auditLog: auditLog,
 	}
 }
 
@@ -49,6 +52,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	user, err := h.repo.FindByIdentifier(r.Context(), identifier)
 	if err != nil {
 		if errors.Is(err, ErrInvalidCredentials) {
+			auditlogs.LogAudit(r.Context(), r, h.auditLog, "auth", "login_failed", "user", nil, nil, map[string]string{"identifier": identifier})
 			response.Error(w, http.StatusUnauthorized, "invalid username or password")
 			return
 		}
@@ -57,11 +61,13 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if !user.IsActive {
+		auditlogs.LogAudit(r.Context(), r, h.auditLog, "auth", "login_failed", "user", &user.ID, nil, map[string]string{"reason": "account inactive"})
 		response.Error(w, http.StatusForbidden, "user account is inactive")
 		return
 	}
 
 	if err := h.service.VerifyPassword(req.Password, user.PasswordHash); err != nil {
+		auditlogs.LogAudit(r.Context(), r, h.auditLog, "auth", "login_failed", "user", &user.ID, nil, map[string]string{"reason": "invalid password"})
 		response.Error(w, http.StatusUnauthorized, "invalid username or password")
 		return
 	}
@@ -76,6 +82,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "login", "user", user.ID, nil, req)
 
 	user.PasswordHash = ""
 

@@ -10,15 +10,18 @@ import (
 	"strings"
 	"time"
 
+	"siakad/backend/internal/modules/auth"
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
 type Handler struct {
-	repo *Repository
+	repo     *Repository
+	auditLog *auditlogs.Repository
 }
 
-func NewHandler(db *sql.DB) *Handler {
-	return &Handler{repo: NewRepository(db)}
+func NewHandler(db *sql.DB, auditLogRepo *auditlogs.Repository) *Handler {
+	return &Handler{repo: NewRepository(db), auditLog: auditLogRepo}
 }
 
 func (h *Handler) RegisterRoutes(mux *http.ServeMux) {
@@ -81,6 +84,13 @@ func (h *Handler) Create(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	user := auth.GetUserFromContext(r.Context())
+	var userID *uint64
+	if user != nil {
+		uid := user.UserID
+		userID = &uid
+	}
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "shared", "create", "announcement", created.ID, userID, req)
 	response.JSON(w, http.StatusCreated, map[string]any{"success": true, "data": created})
 }
 
@@ -108,6 +118,13 @@ func (h *Handler) Update(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	user := auth.GetUserFromContext(r.Context())
+	var userID *uint64
+	if user != nil {
+		uid := user.UserID
+		userID = &uid
+	}
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "shared", "update", "announcement", id, userID, req)
 	response.JSON(w, http.StatusOK, map[string]any{"success": true, "data": updated})
 }
 
@@ -124,6 +141,13 @@ func (h *Handler) Delete(w http.ResponseWriter, r *http.Request) {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+	user := auth.GetUserFromContext(r.Context())
+	var userID *uint64
+	if user != nil {
+		uid := user.UserID
+		userID = &uid
+	}
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "shared", "delete", "announcement", id, userID, nil)
 	response.JSON(w, http.StatusOK, map[string]any{"success": true, "message": "announcement deleted successfully"})
 }
 

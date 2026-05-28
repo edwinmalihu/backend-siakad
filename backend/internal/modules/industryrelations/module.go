@@ -9,6 +9,7 @@ import (
 	"siakad/backend/internal/modules/industryrelations/industrycategories"
 	"siakad/backend/internal/modules/industryrelations/internships"
 	"siakad/backend/internal/modules/industryrelations/internshiplogs"
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
@@ -24,11 +25,12 @@ type Module struct {
 func NewModule(db *sql.DB) Module {
 	module := Module{db: db}
 	if db != nil {
-		module.alumniHandler = alumni.NewHandler(db)
-		module.industryCategoryHandler = industrycategories.NewHandler(db)
-		module.companyHandler = companies.NewHandler(db)
-		module.internshipHandler = internships.NewHandler(db)
-		module.internshipLogHandler = internshiplogs.NewHandler(db)
+		auditLogRepo := auditlogs.NewRepository(db)
+		module.alumniHandler = alumni.NewHandler(db, auditLogRepo)
+		module.industryCategoryHandler = industrycategories.NewHandler(db, auditLogRepo)
+		module.companyHandler = companies.NewHandler(db, auditLogRepo)
+		module.internshipHandler = internships.NewHandler(db, auditLogRepo)
+		module.internshipLogHandler = internshiplogs.NewHandler(db, auditLogRepo)
 	}
 	return module
 }

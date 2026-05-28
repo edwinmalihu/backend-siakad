@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
@@ -21,7 +22,8 @@ func NewModule(db *sql.DB, tokenSecret string, tokenTTL time.Duration) Module {
 	if db != nil {
 		repo := NewRepository(db)
 		service := NewService(tokenSecret, tokenTTL)
-		module.handler = NewHandler(repo, service)
+		auditLogRepo := auditlogs.NewRepository(db)
+		module.handler = NewHandler(repo, service, auditLogRepo)
 	}
 
 	return module

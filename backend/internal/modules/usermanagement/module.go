@@ -1,7 +1,6 @@
 package usermanagement
 
 import (
-	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -9,6 +8,8 @@ import (
 	"strconv"
 	"strings"
 
+	"siakad/backend/internal/modules/auth"
+	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/modules/usermanagement/permissions"
 	"siakad/backend/internal/modules/usermanagement/roles"
 	"siakad/backend/internal/response"
@@ -18,6 +19,7 @@ import (
 
 type Module struct {
 	db                *sql.DB
+	auditLog          *auditlogs.Repository
 	roleHandler       *roles.Handler
 	permissionHandler *permissions.Handler
 }
@@ -25,8 +27,10 @@ type Module struct {
 func NewModule(db *sql.DB) Module {
 	module := Module{db: db}
 	if db != nil {
-		module.roleHandler = roles.NewHandler(db)
-		module.permissionHandler = permissions.NewHandler(db)
+		auditLogRepo := auditlogs.NewRepository(db)
+		module.auditLog = auditLogRepo
+		module.roleHandler = roles.NewHandler(db, auditLogRepo)
+		module.permissionHandler = permissions.NewHandler(db, auditLogRepo)
 	}
 	return module
 }
@@ -188,6 +192,14 @@ func (m Module) replaceRolePermissions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := auth.GetUserFromContext(r.Context())
+	var authUserID *uint64
+	if user != nil {
+		uid := user.UserID
+		authUserID = &uid
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, m.auditLog, "user_management", "replace", "role_permission", roleID, authUserID, req.PermissionIDs)
 	response.JSON(w, http.StatusOK, map[string]any{"success": true, "message": "role permissions updated"})
 }
 
@@ -274,6 +286,14 @@ func (m Module) replaceUserRoles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := auth.GetUserFromContext(r.Context())
+	var authUserID *uint64
+	if user != nil {
+		uid := user.UserID
+		authUserID = &uid
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, m.auditLog, "user_management", "replace", "user_role", userID, authUserID, req.RoleIDs)
 	response.JSON(w, http.StatusOK, map[string]any{"success": true, "message": "user roles updated"})
 }
 
@@ -410,6 +430,20 @@ func (m Module) createUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := auth.GetUserFromContext(r.Context())
+	var authUserID *uint64
+	if user != nil {
+		uid := user.UserID
+		authUserID = &uid
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, m.auditLog, "user_management", "create", "user", uint64(userID), authUserID, map[string]any{
+		"username":  username,
+		"full_name": fullName,
+		"email":     email,
+		"phone":     phone,
+		"is_active": req.IsActive,
+	})
 	m.respondUser(w, r, uint64(userID))
 }
 
@@ -512,6 +546,20 @@ func (m Module) updateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	user := auth.GetUserFromContext(r.Context())
+	var authUserID *uint64
+	if user != nil {
+		uid := user.UserID
+		authUserID = &uid
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, m.auditLog, "user_management", "update", "user", id, authUserID, map[string]any{
+		"username":  username,
+		"full_name": fullName,
+		"email":     email,
+		"phone":     phone,
+		"is_active": req.IsActive,
+	})
 	m.respondUser(w, r, id)
 }
 
@@ -540,6 +588,14 @@ func (m Module) deleteUser(w http.ResponseWriter, r *http.Request) {
 		UPDATE user_profiles SET deleted_at = NOW() WHERE user_id = ?
 	`, id)
 
+	user := auth.GetUserFromContext(r.Context())
+	var authUserID *uint64
+	if user != nil {
+		uid := user.UserID
+		authUserID = &uid
+	}
+
+	auditlogs.LogAuditWithID(r.Context(), r, m.auditLog, "user_management", "delete", "user", id, authUserID, nil)
 	response.JSON(w, http.StatusOK, map[string]any{"success": true, "message": "user deleted successfully"})
 }
 
@@ -615,7 +671,3 @@ func (m Module) respondUser(w http.ResponseWriter, r *http.Request, id uint64) {
 		},
 	})
 }
-
-// suppress unused import errors
-var _ = context.Background
-var _ = errors.New
