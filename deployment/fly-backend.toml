@@ -1,0 +1,39 @@
+app = "siakad-backend"
+primary_region = "sin"
+
+[build]
+  image = "edwinmalihu/backend-siakad:0.0.1-amd64"
+
+[env]
+  APP_NAME = "SIAKAD Backend"
+  APP_ENV = "production"
+  APP_HOST = "0.0.0.0"
+  APP_PORT = "18080"
+  AUTH_TOKEN_SECRET = "production-secret-change-me"
+  MYSQL_ENABLED = "true"
+  MYSQL_HOST = "siakad-mysql.internal"
+  MYSQL_PORT = "3306"
+  MYSQL_USER = "siakad_user"
+  MYSQL_PASSWORD = "siakadpass"
+  MYSQL_DATABASE = "siakad_db"
+  MYSQL_CHARSET = "utf8mb4"
+  MYSQL_COLLATION = "utf8mb4_unicode_ci"
+  MYSQL_PARSE_TIME = "true"
+  MYSQL_LOC = "Local"
+  MYSQL_MAX_OPEN_CONNS = "25"
+  MYSQL_MAX_IDLE_CONNS = "25"
+  MYSQL_CONN_MAX_LIFETIME = "5m"
+  MYSQL_CONN_MAX_IDLE_TIME = "5m"
+
+[http_service]
+  internal_port = 18080
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

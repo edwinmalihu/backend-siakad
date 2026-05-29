@@ -1,0 +1,18 @@
+app = "siakad-frontend"
+primary_region = "sin"
+
+[build]
+  image = "edwinmalihu/frontend-siakad:0.0.1-amd64"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1

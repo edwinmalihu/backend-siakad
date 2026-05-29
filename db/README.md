@@ -132,3 +132,55 @@ mysql -h 192.168.64.5 -P 3306 -u siakad_user -p siakad_db < db/seed-rbac.sql
 | `/admin/user-roles` | User Roles | Assign roles ke user |
 
 Semua halaman RBAC hanya bisa diakses oleh user dengan role `admin`.
+
+---
+
+## Auto-Init di Docker Container
+
+MySQL container menggunakan `entrypoint.sh` yang otomatis melakukan inisialisasi:
+
+### Urutan Inisialisasi
+
+1. **Schema** — Menjalankan `01-schema.sql` (dari `schema.sql`)
+2. **Migrations** — Menjalankan file di `migrations/*.sql` (idempotent, tracking via `_migrations` table)
+3. **Seed RBAC** — Menjalankan `03-seed-rbac.sql`
+4. **Admin User** — Membuat user `admin` (password: `Admin123!`)
+5. **Admin Role** — Assign role administrator
+
+### Behavior
+
+- **Pertama kali** (volume kosong): Full inisialisasi (schema + migrations + seed + admin)
+- **Restart** (sudah ada data): Hanya menjalankan migrations baru yang belum di-apply
+
+### Migrations
+
+File migration di `migrations/` dijalankan berdasarkan nama file (sorted). Progress tracking menggunakan tabel `_migrations`.
+
+```
+_migrations/
+├── id              — Auto increment
+├── filename        — Nama file (unique)
+└── applied_at      — Timestamp penerapan
+```
+
+### Menambah Migration Baru
+
+Buat file baru di `db/migrations/` dengan format `YYYYMMDD_nama.sql`:
+
+```sql
+-- Contoh: 20260530_add_new_column.sql
+ALTER TABLE `some_table` ADD COLUMN `new_column` VARCHAR(100) DEFAULT NULL;
+```
+
+**PENTING**: Semua migration harus **idempotent** (aman dijalankan berulang kali). Gunakan `IF NOT EXISTS` / `IF EXISTS` / `IF @col_exists = 0` pattern.
+
+### Contoh Migration Idempotent
+
+```sql
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS
+  WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'my_table' AND COLUMN_NAME = 'new_col');
+SET @sql = IF(@col_exists = 0,
+  'ALTER TABLE `my_table` ADD COLUMN `new_col` VARCHAR(100) DEFAULT NULL',
+  'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+```

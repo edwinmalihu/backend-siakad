@@ -1,0 +1,6 @@
+frontend/
+backend/siakad-backend
+backend/siakad.log
+.git
+.DS_Store
+*.log

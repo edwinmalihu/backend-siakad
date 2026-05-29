@@ -33,12 +33,14 @@ func New() (*App, error) {
 		return nil, fmt.Errorf("load config: %w", err)
 	}
 
-	logFile, err := os.OpenFile("siakad.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
-	if err != nil {
-		return nil, fmt.Errorf("open log file: %w", err)
+	var logOutput *os.File
+	if f, err := os.OpenFile("siakad.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644); err == nil {
+		logOutput = f
+	} else {
+		logOutput = os.Stdout
 	}
 
-	logger := slog.New(slog.NewTextHandler(logFile, &slog.HandlerOptions{
+	logger := slog.New(slog.NewTextHandler(logOutput, &slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}))
 

@@ -1,0 +1,16 @@
+FROM mysql:8.0
+
+# Copy init scripts
+COPY db/schema.sql /docker-entrypoint-initdb.d/01-schema.sql
+COPY db/seed-rbac.sql /docker-entrypoint-initdb.d/03-seed-rbac.sql
+COPY db/migrations /docker-entrypoint-initdb.d/migrations
+COPY deployment/mysql-init/entrypoint.sh /docker-entrypoint-initdb.d/00-entrypoint.sh
+
+# Make entrypoint executable
+RUN chmod +x /docker-entrypoint-initdb.d/00-entrypoint.sh
+
+# MySQL configuration
+ENV MYSQL_ROOT_PASSWORD=rootpass
+ENV MYSQL_DATABASE=siakad_db
+ENV MYSQL_USER=siakad_user
+ENV MYSQL_PASSWORD=siakadpass

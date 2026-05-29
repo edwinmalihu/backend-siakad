@@ -1,0 +1,57 @@
+services:
+  mysql:
+    image: edwinmalihu/mysql-siakad:0.0.1
+    container_name: siakad-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=siakad_db
+      - MYSQL_USER=siakad_user
+      - MYSQL_PASSWORD=siakadpass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  backend:
+    image: edwinmalihu/backend-siakad:0.0.1
+    container_name: siakad-backend
+    ports:
+      - "18080:18080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - APP_NAME=SIAKAD Backend
+      - APP_ENV=development
+      - APP_HOST=0.0.0.0
+      - APP_PORT=18080
+      - AUTH_TOKEN_SECRET=local-dev-auth-secret
+      - AUTH_TOKEN_TTL=24h
+      - MYSQL_ENABLED=true
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=siakad_user
+      - MYSQL_PASSWORD=siakadpass
+      - MYSQL_DATABASE=siakad_db
+      - MYSQL_CHARSET=utf8mb4
+      - MYSQL_COLLATION=utf8mb4_unicode_ci
+      - MYSQL_PARSE_TIME=true
+      - MYSQL_LOC=Local
+      - MYSQL_MAX_OPEN_CONNS=25
+      - MYSQL_MAX_IDLE_CONNS=25
+      - MYSQL_CONN_MAX_LIFETIME=5m
+      - MYSQL_CONN_MAX_IDLE_TIME=5m
+    restart: unless-stopped
+
+  frontend:
+    image: edwinmalihu/frontend-siakad:0.0.1
+    container_name: siakad-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
