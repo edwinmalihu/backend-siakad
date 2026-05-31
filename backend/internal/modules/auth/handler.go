@@ -5,22 +5,25 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"time"
 
 	"siakad/backend/internal/modules/shared/auditlogs"
 	"siakad/backend/internal/response"
 )
 
 type Handler struct {
-	repo     *Repository
-	service  *Service
-	auditLog *auditlogs.Repository
+	repo         *Repository
+	service      *Service
+	auditLog     *auditlogs.Repository
+	revokedRepo  *RevokedTokenRepository
 }
 
-func NewHandler(repo *Repository, service *Service, auditLog *auditlogs.Repository) *Handler {
+func NewHandler(repo *Repository, service *Service, auditLog *auditlogs.Repository, revokedRepo *RevokedTokenRepository) *Handler {
 	return &Handler{
-		repo:     repo,
-		service:  service,
-		auditLog: auditLog,
+		repo:        repo,
+		service:     service,
+		auditLog:    auditLog,
+		revokedRepo: revokedRepo,
 	}
 }
 
@@ -84,7 +87,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "login", "user", user.ID, &user.ID, req)
+	auditlogs.LogAuditWithID(r.Context(), r, h.auditLog, "auth", "login", "user", user.ID, &user.ID, map[string]string{"identifier": identifier})
 
 	user.PasswordHash = ""
 
@@ -120,6 +123,13 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 		_ = h.auditLog.UpdateLogoutTime(r.Context(), latestLogin.ID)
 	}
 
+	// Revoke the token
+	if h.revokedRepo != nil {
+		_ = h.revokedRepo.Revoke(r.Context(), token, claims.Sub, time.Unix(claims.Exp, 0))
+	}
+
+	auditlogs.LogAudit(r.Context(), r, h.auditLog, "auth", "logout", "user", &claims.Sub, &claims.Sub, nil)
+
 	response.JSON(w, http.StatusOK, map[string]any{
 		"success": true,
 		"message": "logged out successfully",
@@ -131,6 +141,15 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		response.Error(w, http.StatusUnauthorized, "authorization token is required")
 		return
+	}
+
+	// Check if token has been revoked
+	if h.revokedRepo != nil {
+		revoked, err := h.revokedRepo.IsRevoked(r.Context(), token)
+		if err == nil && revoked {
+			response.Error(w, http.StatusUnauthorized, "token has been revoked")
+			return
+		}
 	}
 
 	claims, err := h.service.ParseToken(token)

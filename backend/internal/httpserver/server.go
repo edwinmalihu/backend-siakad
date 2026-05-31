@@ -10,6 +10,7 @@ import (
 	apidocs "siakad/backend/docs"
 	"siakad/backend/internal/database"
 	"siakad/backend/internal/modules/auth"
+	"siakad/backend/internal/modules/license"
 	"siakad/backend/internal/response"
 )
 
@@ -30,6 +31,9 @@ type ServerOptions struct {
 	Logger       *slog.Logger
 	Modules      []Module
 	AuthService  *auth.Service
+	AuthRepo     *auth.Repository
+	RevokedRepo  *auth.RevokedTokenRepository
+	LicenseRepo  *license.Repository
 }
 
 func New(opts ServerOptions) *http.Server {
@@ -41,8 +45,11 @@ func New(opts ServerOptions) *http.Server {
 	}
 
 	var handler http.Handler = mux
+	if opts.LicenseRepo != nil {
+		handler = license.LicenseMiddleware(opts.LicenseRepo, handler)
+	}
 	if opts.AuthService != nil {
-		handler = auth.AuthMiddleware(opts.AuthService, mux)
+		handler = auth.AuthMiddleware(opts.AuthService, opts.AuthRepo, opts.RevokedRepo, handler)
 	}
 	handler = loggingMiddleware(opts.Logger, handler)
 

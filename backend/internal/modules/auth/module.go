@@ -23,7 +23,8 @@ func NewModule(db *sql.DB, tokenSecret string, tokenTTL time.Duration) Module {
 		repo := NewRepository(db)
 		service := NewService(tokenSecret, tokenTTL)
 		auditLogRepo := auditlogs.NewRepository(db)
-		module.handler = NewHandler(repo, service, auditLogRepo)
+		revokedRepo := NewRevokedTokenRepository(db)
+		module.handler = NewHandler(repo, service, auditLogRepo, revokedRepo)
 	}
 
 	return module

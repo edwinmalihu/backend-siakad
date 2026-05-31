@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"strings"
 
@@ -29,7 +30,7 @@ var publicPrefixes = []string{
 	"/api/v1/auth/",
 }
 
-func AuthMiddleware(service *Service, next http.Handler) http.Handler {
+func AuthMiddleware(service *Service, repo *Repository, revokedRepo *RevokedTokenRepository, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := r.URL.Path
 
@@ -51,9 +52,34 @@ func AuthMiddleware(service *Service, next http.Handler) http.Handler {
 			return
 		}
 
+		// Check if token has been revoked (logout)
+		if revokedRepo != nil {
+			revoked, err := revokedRepo.IsRevoked(r.Context(), token)
+			if err == nil && revoked {
+				response.Error(w, http.StatusUnauthorized, "token has been revoked")
+				return
+			}
+		}
+
 		claims, err := service.ParseToken(token)
 		if err != nil {
 			response.Error(w, http.StatusUnauthorized, "invalid or expired token")
+			return
+		}
+
+		// Check if user is still active
+		user, err := repo.FindByID(r.Context(), claims.Sub)
+		if err != nil {
+			if err == sql.ErrNoRows || err == ErrUserNotFound {
+				response.Error(w, http.StatusUnauthorized, "user account not found")
+				return
+			}
+			response.Error(w, http.StatusInternalServerError, "failed to verify user")
+			return
+		}
+
+		if !user.IsActive {
+			response.Error(w, http.StatusForbidden, "user account is inactive")
 			return
 		}
 

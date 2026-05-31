@@ -10,9 +10,10 @@ import (
 )
 
 type Config struct {
-	App   AppConfig
-	Auth  AuthConfig
-	MySQL MySQLConfig
+	App     AppConfig
+	Auth    AuthConfig
+	MySQL   MySQLConfig
+	License LicenseConfig
 }
 
 type AppConfig struct {
@@ -29,6 +30,11 @@ type AppConfig struct {
 type AuthConfig struct {
 	TokenSecret string
 	TokenTTL    time.Duration
+}
+
+type LicenseConfig struct {
+	GeneratorURL string
+	APIKey       string
 }
 
 func (a AppConfig) Address() string {
@@ -85,6 +91,10 @@ func Load() (Config, error) {
 			MaxIdleConns:    getIntEnv("MYSQL_MAX_IDLE_CONNS", 25),
 			ConnMaxLifetime: getDurationEnv("MYSQL_CONN_MAX_LIFETIME", 5*time.Minute),
 			ConnMaxIdleTime: getDurationEnv("MYSQL_CONN_MAX_IDLE_TIME", 5*time.Minute),
+		},
+		License: LicenseConfig{
+			GeneratorURL: getEnv("LICENSE_GENERATOR_URL", "http://localhost:8080"),
+			APIKey:       getEnv("LICENSE_GENERATOR_API_KEY", "siakad-api-key-change-me"),
 		},
 	}
 

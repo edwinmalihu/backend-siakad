@@ -14,6 +14,7 @@ import (
 	"siakad/backend/internal/modules/academic"
 	"siakad/backend/internal/modules/auth"
 	"siakad/backend/internal/modules/industryrelations"
+	"siakad/backend/internal/modules/license"
 	"siakad/backend/internal/modules/master"
 	"siakad/backend/internal/modules/shared"
 	"siakad/backend/internal/modules/studentaffairs"
@@ -60,9 +61,13 @@ func New() (*App, error) {
 		industryrelations.NewModule(db),
 		shared.NewModule(db),
 		usermanagement.NewModule(db),
+		license.NewModule(db, cfg.License),
 	}
 
 	authService := auth.NewService(cfg.Auth.TokenSecret, cfg.Auth.TokenTTL)
+	authRepo := auth.NewRepository(db)
+	revokedRepo := auth.NewRevokedTokenRepository(db)
+	licenseRepo := license.NewRepository(db)
 
 	server := httpserver.New(httpserver.ServerOptions{
 		AppName:      cfg.App.Name,
@@ -75,6 +80,9 @@ func New() (*App, error) {
 		Logger:       logger,
 		Modules:      modules,
 		AuthService:  authService,
+		AuthRepo:     authRepo,
+		RevokedRepo:  revokedRepo,
+		LicenseRepo:  licenseRepo,
 	})
 
 	return &App{
